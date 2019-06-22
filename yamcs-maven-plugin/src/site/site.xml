@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.3.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd">
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.7</version>
+    </skin>
+
+    <body>
+        <links>
+            <item name="https://yamcs.org" href="https://yamcs.org" />
+        </links>
+
+        <menu name="Overview">
+            <item name="Introduction" href="index.html" />
+            <item name="Usage" href="usage.html" />
+        </menu>
+
+        <menu name="Goals">
+            <item name="yamcs:run" href="run-mojo.html" />
+            <item name="yamcs:debug" href="debug-mojo.html" />
+            <item name="yamcs:bundle" href="bundle-mojo.html" />
+        </menu>
+
+        <menu name="Examples">
+            <item name="Yamcs Plugin" href="plugin.html" />
+            <item name="Packaging Yamcs" href="app.html" />
+            <item name="Multi-Packaging Yamcs" href="multiple-apps.html" />
+        </menu>
+    </body>
+</project>
