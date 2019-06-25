@@ -14,12 +14,11 @@ stages:
 jobs:
   include:
     - stage: deploy
-      jdk: openjdk8
       script:
         - mvn -f yamcs-maven-plugin site:site
         - mkdir -p docs
         - touch docs/.nojekyll
-        - cp -r target/site docs/yamcs-maven-plugin
+        - cp -r yamcs-maven-plugin/target/site docs/yamcs-maven-plugin
       deploy:
         provider: pages
         skip-cleanup: true  # Keep HTML files generated during 'script'
