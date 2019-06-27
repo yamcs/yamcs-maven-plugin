@@ -147,9 +147,26 @@ public class BundleMojo extends AbstractYamcsMojo {
             throw new MojoExecutionException("Cannot build lib directory", e);
         }
 
-        File yamcsWebDirectory = new File(libDirectory, "yamcs-web");
-        yamcsWebDirectory.mkdirs();
-        unpackYamcsWeb(yamcsWebDirectory);
+        try {
+            File binDirectory = new File(tempRoot, "bin");
+            binDirectory.mkdirs();
+            copyWrappers(binDirectory);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not copy wrappers", e);
+        }
+
+        File webDirectory = new File(libDirectory, "yamcs-web");
+        webDirectory.mkdirs();
+        unpackYamcsWeb(webDirectory);
+    }
+
+    private void copyWrappers(File binDirectory) throws IOException {
+        copyExecutableResource("/yamcsd", new File(binDirectory, "yamcsd"));
+        copyExecutableResource("/yamcsadmin", new File(binDirectory, "yamcsadmin"));
+        copyExecutableResource("/setclasspath.sh", new File(binDirectory, "setclasspath.sh"));
+
+        copyResource("/yamcsd.bat", new File(binDirectory, "yamcsd.bat"));        
+        copyResource("/lcp.bat", new File(binDirectory, "lcp.bat"));
     }
 
     private File compressBundle(String format) throws MojoExecutionException {

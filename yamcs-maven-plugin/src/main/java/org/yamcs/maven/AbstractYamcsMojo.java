@@ -25,6 +25,7 @@ import org.codehaus.plexus.components.io.filemappers.FileMapper;
 import org.codehaus.plexus.util.FileUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.resolution.ArtifactRequest;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
@@ -112,12 +113,17 @@ public abstract class AbstractYamcsMojo extends AbstractMojo {
         }
     }
 
-    private void copyResource(String resource, File file) throws IOException {
+    protected void copyResource(String resource, File file) throws IOException {
         URL url = getClass().getResource(resource);
         if (url == null) {
             throw new FileNotFoundException(resource);
         }
         FileUtils.copyURLToFile(url, file);
+    }
+
+    protected void copyExecutableResource(String resource, File file) throws IOException {
+        copyResource(resource, file);
+        file.setExecutable(true);
     }
 
     protected List<File> getDependencyFiles(List<String> scopes) throws MojoExecutionException {
@@ -172,7 +178,7 @@ public abstract class AbstractYamcsMojo extends AbstractMojo {
 
     protected File resolveArtifact(String artifact) {
         ArtifactRequest artifactRequest = new ArtifactRequest();
-        artifactRequest.setArtifact(new org.eclipse.aether.artifact.DefaultArtifact(artifact));
+        artifactRequest.setArtifact(new DefaultArtifact(artifact));
         try {
             ArtifactResult artifactResult = repositorySystem.resolveArtifact(repositorySystemSession, artifactRequest);
             if (artifactResult.isResolved()) {

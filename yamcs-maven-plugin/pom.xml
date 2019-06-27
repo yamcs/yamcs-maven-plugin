@@ -47,6 +47,15 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>target/wrappers/yamcs-server-${yamcsVersion}</directory>
+      </resource>
+    </resources>
+
     <pluginManagement>
       <plugins>
         <plugin>
@@ -74,6 +83,34 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-wrappers</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.yamcs</groupId>
+                  <artifactId>yamcs-server</artifactId>
+                  <classifier>wrappers</classifier>>
+                  <version>${yamcsVersion}</version>
+                  <type>tar.gz</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/wrappers</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <reporting>

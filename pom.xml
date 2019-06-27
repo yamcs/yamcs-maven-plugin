@@ -26,7 +26,7 @@
     <mavenVersion>3.0.3</mavenVersion>
     <pluginPluginVersion>3.3</pluginPluginVersion>
     <!-- Only used in archetypes. No need to update this all the time. -->
-    <yamcsVersion>4.9.4</yamcsVersion>
+    <yamcsVersion>4.10.1-SNAPSHOT</yamcsVersion>
   </properties>
 
   <modules>
