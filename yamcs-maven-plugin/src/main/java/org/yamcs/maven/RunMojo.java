@@ -47,8 +47,8 @@ public class RunMojo extends AbstractYamcsMojo {
             throw new MojoExecutionException("Cannot create configuration", e);
         }
 
-        File webDirectory = new File(directory, "lib/yamcs-web");
-        unpackYamcsWeb(webDirectory);
+        File webTarget = new File(directory, "lib/yamcs-web");
+        unpackYamcsWeb(webTarget);
         runYamcs();
     }
 

@@ -209,7 +209,7 @@ public class BundleMojo extends AbstractYamcsMojo {
         } else {
             filename = finalName + "-" + classifier + "." + format;
         }
-        File destFile = new File(outputDirectory, filename);
+        File destFile = new File(target, filename);
         archiver.setDestFile(destFile);
 
         FileSet fileSet = new DefaultFileSet(tempRoot).prefixed(finalName + "/");

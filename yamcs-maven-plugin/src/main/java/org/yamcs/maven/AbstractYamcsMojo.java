@@ -68,7 +68,7 @@ public abstract class AbstractYamcsMojo extends AbstractMojo {
     private File utcTaiHistory;
 
     @Parameter(defaultValue = "${project.build.directory}", readonly = true)
-    protected File outputDirectory;
+    protected File target;
 
     @Parameter(defaultValue = "${project.build.outputDirectory}", readonly = true)
     protected File classesDirectory;
@@ -158,17 +158,17 @@ public abstract class AbstractYamcsMojo extends AbstractMojo {
         return coords.toString();
     }
 
-    protected void unpackYamcsWeb(File unpackDirectory) throws MojoExecutionException {
-        unpackDirectory.mkdirs();
+    protected void unpackYamcsWeb(File webTarget) throws MojoExecutionException {
+        webTarget.mkdirs();
         Set<Artifact> artifacts = (Set<Artifact>) this.project.getArtifacts();
         for (Artifact artifact : artifacts) {
-            if (artifact.getArtifactId().equals("yamcs-web")) {
+            if (artifact.getGroupId().equals("org.yamcs") && artifact.getArtifactId().equals("yamcs-web")) {
                 try {
                     UnArchiver unArchiver = archiverManager.getUnArchiver(artifact.getType());
                     unArchiver.setOverwrite(true);
                     unArchiver.setSourceFile(artifact.getFile());
                     unArchiver.setFileMappers(new FileMapper[] { fileName -> fileName.replace("static/", ""), });
-                    unArchiver.extract("static", unpackDirectory);
+                    unArchiver.extract("static", webTarget);
                 } catch (NoSuchArchiverException e) {
                     throw new MojoExecutionException("Unknown archiver type", e);
                 }
