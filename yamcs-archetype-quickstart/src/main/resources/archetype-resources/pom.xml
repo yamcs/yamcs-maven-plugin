@@ -31,14 +31,12 @@
       <groupId>org.yamcs</groupId>
       <artifactId>yamcs-core</artifactId>
       <version>\${yamcsVersion}</version>
-      <scope>provided</scope>
     </dependency>
     <!-- Adding this dependency, enables the web interface. -->
     <dependency>
       <groupId>org.yamcs</groupId>
       <artifactId>yamcs-web</artifactId>
       <version>\${yamcsVersion}</version>
-      <scope>provided</scope>
     </dependency>
     <!-- Uncomment to use Artemis in your project. -->
     <!--
@@ -46,7 +44,6 @@
       <groupId>org.yamcs</groupId>
       <artifactId>yamcs-artemis</artifactId>
       <version>\${yamcsVersion}</version>
-      <scope>provided</scope>
     </dependency>
     -->
     <!-- Uncomment to use Test Support Equipment in your project. -->
@@ -55,7 +52,6 @@
       <groupId>org.yamcs</groupId>
       <artifactId>yamcs-tse</artifactId>
       <version>\${yamcsVersion}</version>
-      <scope>provided</scope>
     </dependency>
     -->
 
