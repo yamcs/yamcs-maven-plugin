@@ -3,7 +3,9 @@ package org.yamcs.maven;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.cli.Arg;
@@ -18,6 +20,7 @@ public class JavaProcessBuilder {
 
     private List<String> args = new ArrayList<>();
     private List<String> jvmArgs = new ArrayList<>();
+    private Map<String, String> extraEnv = new LinkedHashMap<>();
 
     private Log log;
 
@@ -90,6 +93,10 @@ public class JavaProcessBuilder {
             cliArg.setValue(arg);
         });
 
+        extraEnv.forEach((k, v) -> {
+            cli.addEnvironment(k, v);
+        });
+
         return cli;
     }
 
@@ -109,6 +116,11 @@ public class JavaProcessBuilder {
         } else {
             this.jvmArgs = jvmArgs;
         }
+        return this;
+    }
+
+    public JavaProcessBuilder addEnvironment(String key, String value) {
+        extraEnv.put(key, value);
         return this;
     }
 
