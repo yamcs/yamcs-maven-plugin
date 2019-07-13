@@ -121,8 +121,8 @@ public class JavaProcessBuilder {
     }
 
     private void redirectOutput(Process process, Log logger) {
-        StreamPumper outPumper = new StreamPumper(process.getInputStream(), logger::info);
-        StreamPumper errPumper = new StreamPumper(process.getErrorStream(), logger::info);
+        StreamPumper outPumper = new StreamPumper(process.getInputStream(), System.out::println);
+        StreamPumper errPumper = new StreamPumper(process.getErrorStream(), System.err::println);
 
         outPumper.setPriority(Thread.MIN_PRIORITY + 1);
         errPumper.setPriority(Thread.MIN_PRIORITY + 1);
