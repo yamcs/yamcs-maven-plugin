@@ -4,7 +4,7 @@
 
   <groupId>org.yamcs</groupId>
   <artifactId>yamcs-maven</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
   <packaging>pom</packaging>
 
   <name>Yamcs Maven Integration (parent)</name>
@@ -39,7 +39,7 @@
     <mavenVersion>3.0.3</mavenVersion>
     <pluginPluginVersion>3.3</pluginPluginVersion>
     <!-- Only used in archetypes. No need to update this all the time. -->
-    <yamcsVersion>4.10.1</yamcsVersion>
+    <yamcsVersion>4.10.2</yamcsVersion>
   </properties>
 
   <modules>
