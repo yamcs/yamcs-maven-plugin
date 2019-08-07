@@ -18,10 +18,7 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
-import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
-import org.codehaus.plexus.components.io.filemappers.FileMapper;
 import org.codehaus.plexus.util.FileUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
@@ -50,23 +47,6 @@ public abstract class AbstractYamcsMojo extends AbstractMojo {
     @Parameter(property = "yamcs.configurationDirectory", defaultValue = "${basedir}/src/main/yamcs")
     protected File configurationDirectory;
 
-    /**
-     * The path of the Yamcs logging configuration. This file must be in Java Util
-     * Logging format.
-     */
-    @Parameter(property = "yamcs.loggingFile")
-    private File loggingFile;
-
-    /**
-     * The path of the file describing UTC-TAI offsets history. This file must be in
-     * <a href="http://hpiers.obspm.fr/eoppc/bul/bulc/UTC-TAI.history">IERS format</a>.
-     * <p>
-     * If unspecified, Yamcs uses default offsets that were
-     * valid at the time of release.
-     */
-    @Parameter(property = "yamcs.utcTaiHistory")
-    private File utcTaiHistory;
-
     @Parameter(defaultValue = "${project.build.directory}", readonly = true)
     protected File target;
 
@@ -94,22 +74,10 @@ public abstract class AbstractYamcsMojo extends AbstractMojo {
         // Some default config files from yamcs-core
         File etcDir = new File(directory, "etc");
         etcDir.mkdir();
-        File targetLoggingFile = new File(etcDir, "logging.properties");
-        copyResource("/logging.properties", targetLoggingFile);
-        File targetUtcTaiHistory = new File(etcDir, "UTC-TAI.history");
-        copyResource("/UTC-TAI.history", targetUtcTaiHistory);
 
         // Override with configuration from this plugin
         if (configurationDirectory.exists()) {
             FileUtils.copyDirectoryStructure(configurationDirectory, directory);
-        }
-
-        // Override further if maven properties were set
-        if (loggingFile != null) {
-            FileUtils.copyFile(loggingFile, targetLoggingFile);
-        }
-        if (utcTaiHistory != null) {
-            FileUtils.copyFile(utcTaiHistory, targetUtcTaiHistory);
         }
     }
 
@@ -156,24 +124,6 @@ public abstract class AbstractYamcsMojo extends AbstractMojo {
         }
         coords.append(":").append(artifact.getVersion());
         return coords.toString();
-    }
-
-    protected void unpackYamcsWeb(File webTarget) throws MojoExecutionException {
-        webTarget.mkdirs();
-        Set<Artifact> artifacts = (Set<Artifact>) this.project.getArtifacts();
-        for (Artifact artifact : artifacts) {
-            if (artifact.getGroupId().equals("org.yamcs") && artifact.getArtifactId().equals("yamcs-web")) {
-                try {
-                    UnArchiver unArchiver = archiverManager.getUnArchiver(artifact.getType());
-                    unArchiver.setOverwrite(true);
-                    unArchiver.setSourceFile(artifact.getFile());
-                    unArchiver.setFileMappers(new FileMapper[] { fileName -> fileName.replace("static/", ""), });
-                    unArchiver.extract("static", webTarget);
-                } catch (NoSuchArchiverException e) {
-                    throw new MojoExecutionException("Unknown archiver type", e);
-                }
-            }
-        }
     }
 
     protected File resolveArtifact(String artifact) {

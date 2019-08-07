@@ -34,6 +34,13 @@ public class RunMojo extends AbstractYamcsMojo {
     @Parameter(property = "yamcs.jvmArgs")
     private List<String> jvmArgs;
 
+    /**
+     * Arguments passed to the Yamcs executable. Add each argument in a &lt;arg&gt;
+     * subelement.
+     */
+    @Parameter(property = "yamcs.args")
+    private List<String> args;
+
     public void execute() throws MojoExecutionException {
         if (skip) {
             getLog().info("Skipping execution");
@@ -47,20 +54,13 @@ public class RunMojo extends AbstractYamcsMojo {
             throw new MojoExecutionException("Cannot create configuration", e);
         }
 
-        File webTarget = new File(directory, "lib/yamcs-web");
-        unpackYamcsWeb(webTarget);
         runYamcs();
     }
 
     private void runYamcs() throws MojoExecutionException {
-        // YConfiguration expects config files from the classpath
-        String classpath = new File(directory, "etc").getAbsolutePath();
-        classpath += File.pathSeparator + buildClasspath();
-
         JavaProcessBuilder b = new JavaProcessBuilder(getLog());
         b.setDirectory(directory);
-        b.setArgs(
-                Arrays.asList("-cp", classpath, "-Djava.util.logging.config.file=etc/logging.properties", "org.yamcs.YamcsServer"));
+        b.setArgs(getArgs());
         b.setJvmOpts(getJvmArgs());
         b.setWaitFor(true);
 
@@ -69,6 +69,29 @@ public class RunMojo extends AbstractYamcsMojo {
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to execute", e);
         }
+    }
+
+    protected List<String> getArgs() throws MojoExecutionException {
+        // YConfiguration expects config files from the classpath
+        String classpath = new File(directory, "etc").getAbsolutePath();
+        classpath += File.pathSeparator + buildClasspath();
+
+        List<String> result = new ArrayList<>();
+        result.add("-cp");
+        result.add(classpath);
+        result.add("org.yamcs.YamcsServer");
+        if (args != null) {
+            result.addAll(args);
+        }
+        return result;
+    }
+
+    protected List<String> getJvmArgs() {
+        List<String> result = new ArrayList<>();
+        if (jvmArgs != null) {
+            result.addAll(jvmArgs);
+        }
+        return result;
     }
 
     /**
@@ -86,13 +109,5 @@ public class RunMojo extends AbstractYamcsMojo {
         String classpath = String.join(File.pathSeparator, classpathEntries);
         getLog().debug("Classpath: " + classpath);
         return classpath.toString();
-    }
-
-    protected List<String> getJvmArgs() {
-        List<String> result = new ArrayList<>();
-        if (jvmArgs != null) {
-            result.addAll(jvmArgs);
-        }
-        return result;
     }
 }

@@ -52,7 +52,7 @@
         <directory>src/main/resources</directory>
       </resource>
       <resource>
-        <directory>target/wrappers/yamcs-server-${yamcsVersion}</directory>
+        <directory>target/wrappers/yamcs-core-${yamcsVersion}</directory>
       </resource>
     </resources>
 
@@ -99,8 +99,8 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>org.yamcs</groupId>
-                  <artifactId>yamcs-server</artifactId>
-                  <classifier>wrappers</classifier>>
+                  <artifactId>yamcs-core</artifactId>
+                  <classifier>wrappers</classifier>
                   <version>${yamcsVersion}</version>
                   <type>tar.gz</type>
                 </artifactItem>
