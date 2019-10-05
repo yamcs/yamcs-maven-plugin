@@ -6,49 +6,62 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.maven.plugin.logging.Log;
-import org.codehaus.plexus.util.cli.Arg;
-import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamPumper;
 
 public class JavaProcessBuilder {
 
-    private static final String[] EXECUTABLE_EXTENSIONS = new String[] {
-        "", ".sh", ".bash", ".exe", ".bat", ".cmd"
-    };
+    private static final String[] EXECUTABLE_EXTENSIONS = new String[] { "", ".sh", ".bash", ".exe", ".bat", ".cmd" };
 
     private List<String> args = new ArrayList<>();
     private List<String> jvmArgs = new ArrayList<>();
     private Map<String, String> extraEnv = new LinkedHashMap<>();
+    private long stopTimeout;
 
     private Log log;
 
     private boolean waitFor = true;
 
-    private File directory;    
+    private File directory;
 
     private final File java = findJava();
 
-    public JavaProcessBuilder(Log log) {
+    public JavaProcessBuilder(Log log, long stopTimeout) {
         this.log = log;
+        this.stopTimeout = stopTimeout;
     }
 
     public Process start() throws Exception {
-        Commandline commandLine = buildCommandLine();
+        ProcessBuilder pb = buildProcess();
 
         Process process = null;
         try {
-            log.debug("Executing command: " + commandLine);
-            process = commandLine.execute();
+            log.debug("Executing command: " + pb.command());
+            process = pb.start();
             Process reference = process;
             Thread watchdog = new Thread(() -> {
                 if (reference != null && reference.isAlive()) {
+                    System.out.println("Gracefully stopping...");
                     reference.destroy();
+                    try {
+                        boolean exited = reference.waitFor(stopTimeout, TimeUnit.MILLISECONDS);
+                        if (!exited) {
+                            System.out.println(String.format(
+                                "Yamcs did not stop in under %s milliseconds. Forcing...", stopTimeout));
+                            // This is also no "guarantee", but we did our best.
+                            reference.destroyForcibly();
+                        }
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
             });
 
-            Runtime.getRuntime().addShutdownHook(watchdog);
+            if (stopTimeout >= 0) {
+                Runtime.getRuntime().addShutdownHook(watchdog);
+            }
 
             if (waitFor) {
                 redirectOutput(process, log);
@@ -76,28 +89,16 @@ public class JavaProcessBuilder {
 
     }
 
-    private Commandline buildCommandLine() throws Exception {
-        Commandline cli = new Commandline();
+    private ProcessBuilder buildProcess() throws Exception {
+        List<String> command = new ArrayList<>();
+        command.add(java.getAbsolutePath());
+        command.addAll(jvmArgs);
+        command.addAll(args);
 
-        // Disable explicit quoting of arguments
-        cli.getShell().setQuotedArgumentsEnabled(false);
-        cli.setExecutable(java.getAbsolutePath());
-        cli.setWorkingDirectory(directory);
-
-        jvmArgs.forEach(arg -> {
-            Arg cliArg = cli.createArg();
-            cliArg.setValue(arg);
-        });
-        args.forEach(arg -> {
-            Arg cliArg = cli.createArg();
-            cliArg.setValue(arg);
-        });
-
-        extraEnv.forEach((k, v) -> {
-            cli.addEnvironment(k, v);
-        });
-
-        return cli;
+        ProcessBuilder pb = new ProcessBuilder(command);
+        pb.directory(directory);
+        pb.environment().putAll(extraEnv);
+        return pb;
     }
 
     public JavaProcessBuilder setArgs(List<String> argsList) {
@@ -125,7 +126,7 @@ public class JavaProcessBuilder {
     }
 
     public JavaProcessBuilder setDirectory(File directory) {
-        if (! directory.isDirectory()) {
+        if (!directory.isDirectory()) {
             throw new IllegalArgumentException("Not a directory: '" + directory.getAbsolutePath() + "'");
         }
         this.directory = directory;
@@ -153,7 +154,7 @@ public class JavaProcessBuilder {
             found = find("java", bin);
         }
 
-        if (found == null || ! found.isFile()) {
+        if (found == null || !found.isFile()) {
             throw new IllegalStateException("Unable to find the java executable in JAVA_HOME or in the system path");
         }
         return found;

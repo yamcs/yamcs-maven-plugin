@@ -41,6 +41,15 @@ public class RunMojo extends AbstractYamcsMojo {
     @Parameter(property = "yamcs.args")
     private List<String> args;
 
+    /**
+     * Time in milliseconds that a graceful stop of Yamcs is allowed to take. When
+     * this time has passed, Yamcs is stopped forcefully.
+     * 
+     * A value &lt; 0 causes the stop to be done async from the Maven JVM.
+     */
+    @Parameter(property = "stopTimeout")
+    private long stopTimeout = 10000;
+
     public void execute() throws MojoExecutionException {
         if (skip) {
             getLog().info("Skipping execution");
@@ -58,7 +67,7 @@ public class RunMojo extends AbstractYamcsMojo {
     }
 
     private void runYamcs() throws MojoExecutionException {
-        JavaProcessBuilder b = new JavaProcessBuilder(getLog());
+        JavaProcessBuilder b = new JavaProcessBuilder(getLog(), stopTimeout);
         b.setDirectory(directory);
         b.setArgs(getArgs());
         b.setJvmOpts(getJvmArgs());
@@ -72,16 +81,18 @@ public class RunMojo extends AbstractYamcsMojo {
     }
 
     protected List<String> getArgs() throws MojoExecutionException {
-        // YConfiguration expects config files from the classpath
-        String classpath = new File(directory, "etc").getAbsolutePath();
-        classpath += File.pathSeparator + buildClasspath();
-
         List<String> result = new ArrayList<>();
         result.add("-cp");
-        result.add(classpath);
+        result.add(buildClasspath());
         result.add("org.yamcs.YamcsServer");
         if (args != null) {
-            result.addAll(args);
+            for (String argsEl : args) {
+                for (String arg : argsEl.split("\\s+")) {
+                    if (!arg.trim().isEmpty()) {
+                        result.add(arg);
+                    }
+                }
+            }
         }
         return result;
     }
@@ -89,7 +100,13 @@ public class RunMojo extends AbstractYamcsMojo {
     protected List<String> getJvmArgs() {
         List<String> result = new ArrayList<>();
         if (jvmArgs != null) {
-            result.addAll(jvmArgs);
+            for (String argsEl : jvmArgs) {
+                for (String arg : argsEl.split("\\s+")) {
+                    if (!arg.trim().isEmpty()) {
+                        result.add(arg);
+                    }
+                }
+            }
         }
         return result;
     }
