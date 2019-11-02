@@ -167,23 +167,23 @@ public class BundleMojo extends AbstractYamcsMojo {
             if (format.equals("tar")) {
                 archiver = archiverManager.getArchiver("tar");
                 ((TarArchiver) archiver).setCompression(TarCompressionMethod.none);
-                ((TarArchiver) archiver).setLongfile(TarLongFileMode.gnu);
+                ((TarArchiver) archiver).setLongfile(TarLongFileMode.posix);
             } else if (format.equals("tar.gz") || format.equals("tgz")) {
                 archiver = archiverManager.getArchiver("tar");
                 ((TarArchiver) archiver).setCompression(TarCompressionMethod.gzip);
-                ((TarArchiver) archiver).setLongfile(TarLongFileMode.gnu);
+                ((TarArchiver) archiver).setLongfile(TarLongFileMode.posix);
             } else if (format.equals("tar.bz2") || format.equals("tbz2")) {
                 archiver = archiverManager.getArchiver("tar");
                 ((TarArchiver) archiver).setCompression(TarCompressionMethod.bzip2);
-                ((TarArchiver) archiver).setLongfile(TarLongFileMode.gnu);
+                ((TarArchiver) archiver).setLongfile(TarLongFileMode.posix);
             } else if (format.equals("tar.snappy")) {
                 archiver = archiverManager.getArchiver("tar");
                 ((TarArchiver) archiver).setCompression(TarCompressionMethod.snappy);
-                ((TarArchiver) archiver).setLongfile(TarLongFileMode.gnu);
+                ((TarArchiver) archiver).setLongfile(TarLongFileMode.posix);
             } else if (format.equals("tar.xz") || format.equals("xz")) {
                 archiver = archiverManager.getArchiver("tar");
                 ((TarArchiver) archiver).setCompression(TarCompressionMethod.xz);
-                ((TarArchiver) archiver).setLongfile(TarLongFileMode.gnu);
+                ((TarArchiver) archiver).setLongfile(TarLongFileMode.posix);
             } else if (format.equals("zip")) {
                 archiver = archiverManager.getArchiver("zip");
             } else {
