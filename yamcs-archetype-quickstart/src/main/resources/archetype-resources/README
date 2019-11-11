@@ -2,10 +2,6 @@ You have successfully created a Yamcs project!
 
 Here are some commands to get things started:
 
-mvn versions:use-latest-releases
-
-    Update all dependencies (incl. Yamcs) to the latest release.
-
 mvn yamcs:run
 
     Compiles this project and starts Yamcs on localhost.

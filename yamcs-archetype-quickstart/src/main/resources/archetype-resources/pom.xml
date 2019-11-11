@@ -1,20 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
- 
+
   <groupId>\${groupId}</groupId>
   <artifactId>\${artifactId}</artifactId>
   <version>\${version}</version>
   <packaging>jar</packaging>
- 
-  <name>\${artifactId}</name>
 
-  <organization>
-    <name>Example Company</name>
-    <url>https://www.example.com</url>
-  </organization>
+  <name>\${artifactId}</name>
+  <url>https://example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,7 +19,7 @@
     -->
     <yamcsVersion>${yamcsVersion}</yamcsVersion>
   </properties>
- 
+
   <dependencies>
     <!-- Yamcs core framework -->
     <dependency>
@@ -37,30 +32,6 @@
       <groupId>org.yamcs</groupId>
       <artifactId>yamcs-web</artifactId>
       <version>\${yamcsVersion}</version>
-    </dependency>
-    <!-- Uncomment to use Artemis in your project. -->
-    <!--
-    <dependency>
-      <groupId>org.yamcs</groupId>
-      <artifactId>yamcs-artemis</artifactId>
-      <version>\${yamcsVersion}</version>
-    </dependency>
-    -->
-    <!-- Uncomment to use Test Support Equipment in your project. -->
-    <!--
-    <dependency>
-      <groupId>org.yamcs</groupId>
-      <artifactId>yamcs-tse</artifactId>
-      <version>\${yamcsVersion}</version>
-    </dependency>
-    -->
-
-    <!-- Test dependencies -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -75,7 +46,6 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.yamcs</groupId>
         <artifactId>yamcs-maven-plugin</artifactId>

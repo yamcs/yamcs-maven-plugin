@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
 
   <name>Yamcs Maven Integration (parent)</name>
-  <url>https://www.yamcs.org</url>
+  <url>https://yamcs.org</url>
   <description>Yamcs Maven Integration</description>
 
   <scm>
@@ -39,7 +39,7 @@
     <mavenVersion>3.0.3</mavenVersion>
     <pluginPluginVersion>3.3</pluginPluginVersion>
     <!-- Only used in archetypes. No need to update this all the time. -->
-    <yamcsVersion>4.10.3</yamcsVersion>
+    <yamcsVersion>4.10.4</yamcsVersion>
   </properties>
 
   <modules>

@@ -27,20 +27,23 @@ mvn archetype:generate -DgroupId=com.mycompany -DartifactId=myproject \
 myproject/
 |-- README
 |-- pom.xml
-`-- src
-    `-- main
-        |-- java
-        |   `-- com
-        |       `-- mycompany
-        `-- yamcs
-            |-- etc
-            |   |-- processor.yaml
-            |   |-- yamcs.example.yaml
-            |   `-- yamcs.yaml
-            `-- mdb
-                |-- BogusSAT-1.xml
-                |-- BogusSAT-2.xml
-                `-- ccsds-green-book.xml
+|-- simulator.py
+|-- src
+|   `-- main
+|       |-- java
+|       |   `-- com
+|       |       `-- mycompany
+|       |           `-- myproject
+|       |               |-- MyPacketPreprocessor.java
+|       |               `-- NoopCompletenessIndex.java
+|       `-- yamcs
+|           |-- etc
+|           |   |-- processor.yaml
+|           |   |-- yamcs.myproject.yaml
+|           |   `-- yamcs.yaml
+|           `-- mdb
+|               `-- xtce.xml
+`-- testdata.ccsds
 ------------------------------------------
 
   * Custom java classes (if any) go into <<<$\{project.basedir\}/src/main/java/>>>.
