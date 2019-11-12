@@ -47,7 +47,7 @@ public class RunMojo extends AbstractYamcsMojo {
      * 
      * A value &lt; 0 causes the stop to be done async from the Maven JVM.
      */
-    @Parameter(property = "stopTimeout")
+    @Parameter(property = "yamcs.stopTimeout")
     private long stopTimeout = 10000;
 
     public void execute() throws MojoExecutionException {
