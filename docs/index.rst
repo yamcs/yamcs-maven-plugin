@@ -9,9 +9,18 @@ Yamcs is a Java-based open source mission control framework. Its functionalities
 Goals
 ~~~~~
 
-* :doc:`goals/run`
-* :doc:`goals/debug`
-* :doc:`goals/bundle`
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Goal
+      - Description
+    * - :doc:`goals/run`
+      - Run Yamcs as part of a Maven build.
+    * - :doc:`goals/debug`
+      - Run Yamcs in debug mode as part of a Maven build.
+    * - :doc:`goals/bundle`
+      - Bundle a Yamcs application into a single archive file.
 
 
 Usage
