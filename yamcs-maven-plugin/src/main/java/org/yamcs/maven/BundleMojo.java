@@ -139,9 +139,7 @@ public class BundleMojo extends AbstractYamcsMojo {
 
         try {
             for (File file : libFiles) {
-                if (!file.getName().startsWith("yamcs-web")) {
-                    FileUtils.copyFileToDirectory(file, libDirectory);
-                }
+                FileUtils.copyFileToDirectory(file, libDirectory);
             }
         } catch (IOException e) {
             throw new MojoExecutionException("Cannot build lib directory", e);
