@@ -4,8 +4,15 @@ project = u''
 copyright = u'2019, Space Applications Services'
 author = u'Yamcs Team'
 
+from xml.etree import ElementTree as ET
+
+ET.register_namespace('', 'http://maven.apache.org/POM/4.0.0')
+tree = ET.ElementTree()
+tree.parse('../pom.xml')
+p = tree.getroot().find('{http://maven.apache.org/POM/4.0.0}version')
+
 # The short X.Y version
-version = u'1.1.2'
+version = p.text
 
 # The full version, including alpha/beta/rc tags
 release = version

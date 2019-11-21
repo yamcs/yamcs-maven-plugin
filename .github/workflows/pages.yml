@@ -6,8 +6,8 @@ on:
       - stable
 
 jobs:
-  javadoc:
-    name: Update javadoc
+  sphinx:
+    name: Update website
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
