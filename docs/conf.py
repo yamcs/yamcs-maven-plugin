@@ -1,27 +1,11 @@
 # -*- coding: utf-8 -*-
-#
-# Configuration file for the Sphinx documentation builder.
-#
-# This file does only contain a selection of the most common options. For a
-# full list see the documentation:
-# http://www.sphinx-doc.org/en/master/config
 
-import os
-import sys
-
-import pkg_resources
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('_ext'))
-
-project = u'yamcs-maven-plugin'
+project = u''
 copyright = u'2019, Space Applications Services'
 author = u'Yamcs Team'
 
 # The short X.Y version
-version = u''
+version = u'1.1.2'
 
 # The full version, including alpha/beta/rc tags
 release = version
@@ -57,7 +41,7 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'nature'
+#html_theme = 'nature'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -73,32 +57,3 @@ html_theme_options = {
 #html_static_path = ['_static']
 
 html_show_sourcelink = False
-
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
-    'papersize': 'a4paper',
-
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
-
-    # Additional stuff for the LaTeX preamble.
-    #
-    'preamble': '\setcounter{tocdepth}{2}',
-
-    # Latex figure (float) alignment
-    #
-    'figure_align': 'htbp',
-}
-
-# Grouping the document tree into LaTeX files. List of tuples
-# (source start file, target name, title,
-#  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    ('index', 'yamcs-maven-plugin.tex', 'Yamcs Maven Pugin', 'Space Applications Services', 'manual'),
-]
-
-latex_show_pagerefs = True
-
-latex_show_urls = 'footnote'

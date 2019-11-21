@@ -28,7 +28,7 @@ Usage
 
 This plugin expects to find Yamcs configuration in ``${project.basedir}/src/main/yamcs`` in subfolders ``etc`` and ``mdb``.
 
-The pom.xml adds dependencies to the desired Yamcs modules. At least a dependency to yamcs-core is required. yamcs-web is another common dependency that makes Yamcs host a prebuilt copy of the Yamcs web interface:
+In the pom.xml add dependencies to the desired Yamcs modules. At least a dependency to yamcs-core is required. yamcs-web is another common dependency that makes Yamcs host a prebuilt copy of the Yamcs web interface:
 
 .. code-block:: xml
 
