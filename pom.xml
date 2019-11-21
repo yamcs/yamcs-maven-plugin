@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.yamcs</groupId>
-  <artifactId>yamcs-maven</artifactId>
+  <artifactId>yamcs-maven-plugin</artifactId>
   <version>1.1.2-SNAPSHOT</version>
-  <packaging>pom</packaging>
+  <packaging>maven-plugin</packaging>
 
-  <name>Yamcs Maven Integration (parent)</name>
+  <name>Yamcs Maven Plugin</name>
   <url>https://yamcs.org</url>
-  <description>Yamcs Maven Integration</description>
+  <description>Maven Plugin that runs Yamcs</description>
 
   <scm>
     <url>https://github.com/yamcs/yamcs-maven</url>
@@ -38,14 +38,41 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mavenVersion>3.0.3</mavenVersion>
     <pluginPluginVersion>3.3</pluginPluginVersion>
-    <!-- Only used in archetypes. No need to update this all the time. -->
+    <!-- Only used for fetching wrappers. No need to update this all the time. -->
     <yamcsVersion>4.10.4</yamcsVersion>
   </properties>
 
-  <modules>
-    <module>yamcs-maven-plugin</module>
-    <module>yamcs-archetype-quickstart</module>
-  </modules>
+  <prerequisites>
+    <maven>${mavenVersion}</maven>
+  </prerequisites>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-aether-provider</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-archiver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
   <dependencyManagement>
     <dependencies>
@@ -83,20 +110,17 @@
   </dependencyManagement>
 
   <build>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.archetype</groupId>
-        <artifactId>archetype-packaging</artifactId>
-        <version>3.1.1</version>
-      </extension>
-    </extensions>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>target/wrappers/yamcs-core-${yamcsVersion}</directory>
+      </resource>
+    </resources>
+
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-archetype-plugin</artifactId>
-          <version>3.1.1</version>
-        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -116,6 +140,25 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
           <version>${pluginPluginVersion}</version>
+          <configuration>
+            <mojoDependencies />
+            <!-- Don't scan dependencies -->
+            <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+          </configuration>
+          <executions>
+            <execution>
+              <id>default-descriptor</id>
+              <goals>
+                <goal>descriptor</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>generate-helpmojo</id>
+              <goals>
+                <goal>helpmojo</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -179,6 +222,31 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-wrappers</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.yamcs</groupId>
+                  <artifactId>yamcs-core</artifactId>
+                  <classifier>wrappers</classifier>
+                  <version>${yamcsVersion}</version>
+                  <type>tar.gz</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/wrappers</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -192,6 +260,24 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.0.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>${pluginPluginVersion}</version>
+        <configuration>
+          <mojoDependencies />
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <profiles>
     <profile>

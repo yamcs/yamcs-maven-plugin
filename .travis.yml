@@ -14,10 +14,10 @@ jobs:
   include:
     - stage: deploy
       script:
-        - mvn -f yamcs-maven-plugin site:site
+        - mvn site:site
         - mkdir -p docs
         - touch docs/.nojekyll
-        - cp -r yamcs-maven-plugin/target/site docs/yamcs-maven-plugin
+        - cp -r target/site/* docs
       deploy:
         provider: pages
         skip-cleanup: true  # Keep HTML files generated during 'script'
