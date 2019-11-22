@@ -12,7 +12,7 @@
   <description>Maven Plugin that runs Yamcs</description>
 
   <scm>
-    <url>https://github.com/yamcs/yamcs-maven</url>
+    <url>https://github.com/yamcs/yamcs-maven-plugin</url>
   </scm>
 
   <licenses>
@@ -254,24 +254,6 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.0.0</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-plugin-plugin</artifactId>
-        <version>${pluginPluginVersion}</version>
-        <configuration>
-          <mojoDependencies />
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
 
   <profiles>
     <profile>
