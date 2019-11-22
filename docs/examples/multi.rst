@@ -14,7 +14,7 @@ If you need different configurations of Yamcs for each server, then look into ov
     
       <properties>
         <!-- Check the latest version at https://yamcs.org -->
-        <yamcsVersion>4.10.4</yamcsVersion>
+        <yamcsVersion>{{ YAMCS_VERSION }}</yamcsVersion>
       </properties>
     
       <dependencies>
@@ -35,7 +35,7 @@ If you need different configurations of Yamcs for each server, then look into ov
           <plugin>
             <groupId>org.yamcs</groupId>
             <artifactId>yamcs-maven-plugin</artifactId>
-            <version>1.1.1</version>
+            <version>{{ YAMCS_PLUGIN_VERSION }}</version>
             <executions>
               <execution>
                 <id>bundle-yamcs1</id>

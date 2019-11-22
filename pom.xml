@@ -38,7 +38,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mavenVersion>3.0.3</mavenVersion>
     <pluginPluginVersion>3.3</pluginPluginVersion>
-    <!-- Only used for fetching wrappers. No need to update this all the time. -->
     <yamcsVersion>4.10.4</yamcsVersion>
   </properties>
 

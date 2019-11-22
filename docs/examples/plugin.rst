@@ -19,7 +19,7 @@ To package your Yamcs plugin, simply do ``mvn package``. The resulting jar artif
     
       <properties>
         <!-- Check the latest version at https://yamcs.org -->
-        <yamcsVersion>4.10.4</yamcsVersion>
+        <yamcsVersion>{{ YAMCS_VERSION }}</yamcsVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       </properties>
     
@@ -51,7 +51,7 @@ To package your Yamcs plugin, simply do ``mvn package``. The resulting jar artif
           <plugin>
             <groupId>org.yamcs</groupId>
             <artifactId>yamcs-maven-plugin</artifactId>
-            <version>1.1.1</version>
+            <version>{{ YAMCS_PLUGIN_VERSION }}</version>
           </plugin>
         </plugins>
       </build>

@@ -38,7 +38,7 @@ In the pom.xml add dependencies to the desired Yamcs modules. At least a depende
     
       <properties>
         <!-- Check the latest version at https://yamcs.org -->
-        <yamcsVersion>4.10.4</yamcsVersion>
+        <yamcsVersion>{{ YAMCS_VERSION }}</yamcsVersion>
       </properties>
     
       <dependencies>
@@ -60,7 +60,7 @@ In the pom.xml add dependencies to the desired Yamcs modules. At least a depende
           <plugin>
             <groupId>org.yamcs</groupId>
             <artifactId>yamcs-maven-plugin</artifactId>
-            <version>1.1.1</version>
+            <version>{{ YAMCS_PLUGIN_VERSION }}</version>
           </plugin>
         </plugins>
       </build>
