@@ -1,6 +1,3 @@
-# Yamcs Maven Integration
+# Yamcs Maven Plugin
 
-This project groups Yamcs extensions to Maven:
-
-* yamcs-archetype-quickstart: A Maven archetype for kickstarting a minimal Maven project for developing a Yamcs application.
-* yamcs-maven-plugin: A Maven Plugin that allows running, debugging and packaging a Yamcs application.
+This project holds the source code for the yamcs-maven-plugin, a plugin for Maven that allows running, debugging and packaging a Yamcs application.
