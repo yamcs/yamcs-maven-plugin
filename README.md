@@ -2,4 +2,4 @@
 
 This project holds the source code for the yamcs-maven-plugin, a plugin for Maven that allows running, debugging and packaging a Yamcs application.
 
-Documentation: https://yamcs.github.io/yamcs-maven-plugin/
+Documentation: https://yamcs.org/docs/yamcs-maven-plugin/
