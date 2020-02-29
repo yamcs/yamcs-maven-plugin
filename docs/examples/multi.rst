@@ -13,7 +13,6 @@ If you need different configurations of Yamcs for each server, then look into ov
       <packaging>jar</packaging>
     
       <properties>
-        <!-- Check the latest version at https://yamcs.org -->
         <yamcsVersion>{{ YAMCS_VERSION }}</yamcsVersion>
       </properties>
     

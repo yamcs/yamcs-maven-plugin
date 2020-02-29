@@ -12,7 +12,6 @@ This example binds the ``bundle`` goal of the yamcs-maven-plugin to the Maven ``
       <packaging>jar</packaging>
     
       <properties>
-        <!-- Check the latest version at https://yamcs.org -->
         <yamcsVersion>{{ YAMCS_VERSION }}</yamcsVersion>
       </properties>
     

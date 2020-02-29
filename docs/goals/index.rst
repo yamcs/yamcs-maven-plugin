@@ -7,3 +7,4 @@ Goals
     run
     debug
     bundle
+    run-tool

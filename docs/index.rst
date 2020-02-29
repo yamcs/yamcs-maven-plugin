@@ -21,6 +21,8 @@ Goals
       - Run Yamcs in debug mode as part of a Maven build.
     * - :doc:`goals/bundle`
       - Bundle a Yamcs application into a single archive file.
+    * - :doc:`goals/run-tool`
+      - Run a Yamcs-related tool as part of a Maven build.
 
 
 Usage
@@ -37,7 +39,6 @@ In the pom.xml add dependencies to the desired Yamcs modules. At least a depende
       <packaging>jar</packaging>
     
       <properties>
-        <!-- Check the latest version at https://yamcs.org -->
         <yamcsVersion>{{ YAMCS_VERSION }}</yamcsVersion>
       </properties>
     

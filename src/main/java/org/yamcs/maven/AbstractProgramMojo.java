@@ -1,9 +1,6 @@
 package org.yamcs.maven;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -12,72 +9,28 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProjectHelper;
-import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.util.FileUtils;
+import org.apache.maven.project.MavenProject;
+import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.resolution.ArtifactRequest;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
 
-/**
- * Collects general Maven functionalities for use in specific Mojos
- */
-public abstract class AbstractYamcsMojo extends AbstractProgramMojo {
+public abstract class AbstractProgramMojo extends AbstractMojo {
 
-    /**
-     * Skip execution
-     */
-    @Parameter(property = "yamcs.skip", defaultValue = "false")
-    protected boolean skip;
+    @Parameter(defaultValue = "${project}", readonly = true)
+    protected MavenProject project;
 
-    /**
-     * The directory that contains Yamcs configuration files. By convention this
-     * contains subfolders named <code>etc</code> and <code>mdb</code>.
-     * <p>
-     * Relative paths in yaml configuration files are resolved from this directory.
-     */
-    @Parameter(property = "yamcs.configurationDirectory", defaultValue = "${basedir}/src/main/yamcs")
-    protected File configurationDirectory;
-
-    @Parameter(defaultValue = "${project.build.directory}", readonly = true)
-    protected File target;
-
-    @Parameter(defaultValue = "${project.build.outputDirectory}", readonly = true)
-    protected File classesDirectory;
+    @Parameter(defaultValue = "${repositorySystemSession}", readonly = true)
+    protected DefaultRepositorySystemSession repositorySystemSession;
 
     @Component
-    protected ArchiverManager archiverManager;
-
-    @Component
-    protected MavenProjectHelper projectHelper;
-
-    protected void initConfiguration(File directory) throws IOException {
-        directory.mkdirs();
-
-        File etcDir = new File(directory, "etc");
-        etcDir.mkdir();
-
-        if (configurationDirectory.exists()) {
-            FileUtils.copyDirectoryStructure(configurationDirectory, directory);
-        }
-    }
-
-    protected void copyResource(String resource, File file) throws IOException {
-        URL url = getClass().getResource(resource);
-        if (url == null) {
-            throw new FileNotFoundException(resource);
-        }
-        FileUtils.copyURLToFile(url, file);
-    }
-
-    protected void copyExecutableResource(String resource, File file) throws IOException {
-        copyResource(resource, file);
-        file.setExecutable(true);
-    }
+    protected RepositorySystem repositorySystem;
 
     protected List<File> getDependencyFiles(List<String> scopes) throws MojoExecutionException {
         Set<File> directDeps = extractArtifactPaths(this.project.getDependencyArtifacts(), scopes);
