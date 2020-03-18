@@ -23,6 +23,8 @@ Goals
       - Bundle a Yamcs application into a single archive file.
     * - :doc:`goals/run-tool`
       - Run a Yamcs-related tool as part of a Maven build.
+    * - :doc:`goals/detect`
+      - Detect metadata for Yamcs plugins.
 
 
 Usage

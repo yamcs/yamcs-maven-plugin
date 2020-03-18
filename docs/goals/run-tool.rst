@@ -23,8 +23,8 @@ tool (string)
     User property is: ``yamcs.tool``
 
 directory (file)
-  The directory where Yamcs is installed.
+    The directory where Yamcs is installed.
 
-  Default value is: ``${project.build.directory}/yamcs``
+    Default value is: ``${project.build.directory}/yamcs``
 
-  User property is: ``yamcs.directory``
+    User property is: ``yamcs.directory``

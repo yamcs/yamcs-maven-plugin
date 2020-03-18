@@ -11,6 +11,8 @@ To prototype your plugin in a local Yamcs application, add the ``yamcs-maven-plu
 
 To package your Yamcs plugin, simply do ``mvn package``. The resulting jar artifact can be dropped in the ``lib/`` or ``lib/ext/`` folder of any compatible Yamcs server.
 
+For optimal integration we recommend adding an execution of the :doc:`../goals/detect` mojo as shown below. It will allow Yamcs to find metadata on your plugin and will give your plugin the opportunity to hook into the lifecycle of Yamcs.
+
 .. code-block:: xml
 
     <project>
@@ -51,6 +53,13 @@ To package your Yamcs plugin, simply do ``mvn package``. The resulting jar artif
             <groupId>org.yamcs</groupId>
             <artifactId>yamcs-maven-plugin</artifactId>
             <version>{{ YAMCS_PLUGIN_VERSION }}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>detect</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>

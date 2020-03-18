@@ -8,3 +8,4 @@ Goals
     debug
     bundle
     run-tool
+    detect
