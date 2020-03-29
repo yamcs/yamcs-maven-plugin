@@ -100,14 +100,20 @@ public class DetectMojo extends AbstractMojo {
 
             Properties props = new Properties();
             props.setProperty("name", project.getArtifactId());
-            props.setProperty("description", project.getDescription());
+            if (project.getDescription() != null) {
+                props.setProperty("description", project.getDescription());
+            }
             props.setProperty("version", project.getVersion());
             props.setProperty("generated", ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT));
 
             Organization org = project.getOrganization();
             if (org != null) {
-                props.setProperty("organization", org.getName());
-                props.setProperty("organizationUrl", org.getUrl());
+                if (org.getName() != null) {
+                    props.setProperty("organization", org.getName());
+                }
+                if (org.getUrl() != null) {
+                    props.setProperty("organizationUrl", org.getUrl());
+                }
             }
 
             File propsFile = new File(pluginResourcesDir, "plugin.properties");
