@@ -37,8 +37,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mavenVersion>3.0.3</mavenVersion>
-    <pluginPluginVersion>3.3</pluginPluginVersion>
-    <yamcsVersion>4.10.8</yamcsVersion>
+    <pluginPluginVersion>3.5.2</pluginPluginVersion>
+    <yamcsVersion>4.10.9</yamcsVersion>
   </properties>
 
   <prerequisites>

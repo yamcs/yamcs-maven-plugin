@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Properties;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.library.ErrorHandler;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.parser.ParseException;
 
 import org.apache.maven.model.Organization;
 import org.apache.maven.plugin.AbstractMojo;
@@ -40,10 +42,9 @@ public class DetectMojo extends AbstractMojo {
     @Parameter(property = "yamcs.skip", defaultValue = "false")
     protected boolean skip;
 
-
     @Parameter(defaultValue = "${project}", readonly = true)
     protected MavenProject project;
-    
+
     @Parameter(defaultValue = "${project.build.outputDirectory}", readonly = true)
     protected File classesDirectory;
 
@@ -59,6 +60,15 @@ public class DetectMojo extends AbstractMojo {
             return;
         }
         JavaProjectBuilder projectBuilder = new JavaProjectBuilder();
+        projectBuilder.setErrorHandler(new ErrorHandler() {
+            @Override
+            public void handle(ParseException parseException) {
+                // Some syntax (often in generated code) trips the qdox parser.
+                // Ignore those errors. We only care to find Yamcs plugin classes.
+                getLog().debug("Squelching qdox parse exception", parseException);
+            }
+        });
+
         for (String sourceRoot : project.getCompileSourceRoots()) {
             projectBuilder.addSourceTree(new File(sourceRoot));
         }
