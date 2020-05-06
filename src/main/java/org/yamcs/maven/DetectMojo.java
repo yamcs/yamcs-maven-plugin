@@ -112,6 +112,8 @@ public class DetectMojo extends AbstractMojo {
             props.setProperty("name", project.getArtifactId());
             if (project.getDescription() != null) {
                 props.setProperty("description", project.getDescription());
+            } else if (project.getName() != null) {
+                props.setProperty("description", project.getName());
             }
             props.setProperty("version", project.getVersion());
             props.setProperty("generated", ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT));
