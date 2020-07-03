@@ -43,7 +43,8 @@ public class BundleMojo extends AbstractYamcsMojo {
     private String finalName;
 
     /**
-     * Controls whether this mojo attaches the resulting bundle to the Maven project.
+     * Controls whether this mojo attaches the resulting bundle to the Maven
+     * project.
      */
     @Parameter(property = "yamcs.attach", defaultValue = "true")
     private boolean attach;
@@ -51,7 +52,7 @@ public class BundleMojo extends AbstractYamcsMojo {
     /**
      * Classifier to add to the generated bundle.
      */
-    @Parameter(defaultValue =  "bundle")
+    @Parameter(defaultValue = "bundle")
     private String classifier;
 
     /**
@@ -68,6 +69,7 @@ public class BundleMojo extends AbstractYamcsMojo {
      * </ul>
      * 
      * If unspecified the behavior is equivalent to:
+     * 
      * <pre>
      * &lt;formats&gt;
      *   &lt;format&gt;tar.gz&lt;/format&gt;
@@ -156,7 +158,9 @@ public class BundleMojo extends AbstractYamcsMojo {
 
     private void copyWrappers(File binDirectory) throws IOException {
         copyExecutableResource("/yamcsd", new File(binDirectory, "yamcsd"));
+        copyExecutableResource("/yamcsd.cmd", new File(binDirectory, "yamcsd.cmd"));
         copyExecutableResource("/yamcsadmin", new File(binDirectory, "yamcsadmin"));
+        copyExecutableResource("/yamcsadmin.cmd", new File(binDirectory, "yamcsadmin.cmd"));
     }
 
     private File compressBundle(String format) throws MojoExecutionException {
