@@ -84,6 +84,7 @@ public class RunMojo extends AbstractYamcsMojo {
         List<String> result = new ArrayList<>();
         result.add("-cp");
         result.add(buildClasspath());
+        result.add("-Djava.util.logging.manager=org.yamcs.logging.YamcsLogManager");
         result.add("org.yamcs.YamcsServer");
         if (args != null) {
             for (String argsEl : args) {

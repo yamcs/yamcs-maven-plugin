@@ -1,12 +1,17 @@
 package org.yamcs.maven;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import jnr.constants.platform.Signal;
+import jnr.posix.POSIX;
+import jnr.posix.POSIXFactory;
 
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.cli.StreamPumper;
@@ -41,10 +46,22 @@ public class JavaProcessBuilder {
             log.debug("Executing command: " + pb.command());
             process = pb.start();
             Process reference = process;
+
+            // Get this early, because it could generate ClassNotFoundException during shutdown
+            POSIX posix = POSIXFactory.getNativePOSIX();
+            
             Thread watchdog = new Thread(() -> {
                 if (reference != null && reference.isAlive()) {
                     System.out.println("Gracefully stopping...");
-                    reference.destroy();
+                    
+                    // Prefer not to use Process.destroy(), because this also immediately shuts down
+                    // its output stream, which may still contain useful information.
+                    int pid = getProcessPid(reference);
+                    if (pid != -1) {
+                        posix.kill(pid, Signal.SIGTERM.intValue());
+                    } else {
+                        reference.destroy();
+                    }
                     try {
                         boolean exited = reference.waitFor(stopTimeout, TimeUnit.MILLISECONDS);
                         if (!exited) {
@@ -86,7 +103,6 @@ public class JavaProcessBuilder {
             }
             throw new Exception("Error running command: " + e.getMessage(), e);
         }
-
     }
 
     private ProcessBuilder buildProcess() throws Exception {
@@ -100,6 +116,20 @@ public class JavaProcessBuilder {
         pb.environment().putAll(extraEnv);
         return pb;
     }
+
+    // This should work on linux and osx
+    private int getProcessPid(Process process) {
+        Class<? extends Process> clazz = process.getClass();
+        try {
+            Field field = clazz.getDeclaredField("pid");
+            field.setAccessible(true);
+            return field.getInt(process);
+        } catch (NoSuchFieldException e) {
+            return -1;
+        } catch (IllegalAccessException e) {
+            return -1;
+        }
+  }
 
     public JavaProcessBuilder setArgs(List<String> argsList) {
         this.args = new ArrayList<>(argsList);
