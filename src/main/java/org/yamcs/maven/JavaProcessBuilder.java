@@ -56,7 +56,7 @@ public class JavaProcessBuilder {
                     
                     // Prefer not to use Process.destroy(), because this also immediately shuts down
                     // its output stream, which may still contain useful information.
-                    int pid = getProcessPid(reference);
+                    long pid = getProcessPid(reference);
                     if (pid != -1) {
                         posix.kill(pid, Signal.SIGTERM.intValue());
                     } else {
@@ -118,18 +118,22 @@ public class JavaProcessBuilder {
     }
 
     // This should work on linux and osx
-    private int getProcessPid(Process process) {
-        Class<? extends Process> clazz = process.getClass();
+    private long getProcessPid(Process process) {
         try {
-            Field field = clazz.getDeclaredField("pid");
-            field.setAccessible(true);
-            return field.getInt(process);
-        } catch (NoSuchFieldException e) {
-            return -1;
-        } catch (IllegalAccessException e) {
-            return -1;
+            // Java 9+
+            return process.pid();
+        } catch (NoSuchMethodError e) {
+            // Java 8 (on java 11 below code works, but generates reflection warnings)
+            Class<? extends Process> clazz = process.getClass();
+            try {
+                Field field = clazz.getDeclaredField("pid");
+                field.setAccessible(true);
+                return field.getInt(process);
+            } catch (NoSuchFieldException | IllegalAccessException e2) {
+                return -1;
+            }
         }
-  }
+    }
 
     public JavaProcessBuilder setArgs(List<String> argsList) {
         this.args = new ArrayList<>(argsList);
