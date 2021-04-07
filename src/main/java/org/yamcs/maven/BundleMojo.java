@@ -64,6 +64,13 @@ public class BundleMojo extends AbstractYamcsMojo {
     private boolean includeDefaultWrappers;
 
     /**
+     * Whether this module's configuration directory (default location: <code>src/main/yamcs</code>)
+     * should be included in the bundle.
+     */
+    @Parameter(property = "yamcs.includeConfiguration", defaultValue = "true")
+    private boolean includeConfiguration;
+
+    /**
      * Specifies the formats of the bundle. Multiple formats can be supplied. Each
      * format is specified by supplying one of the following values in a
      * &lt;format&gt; subelement:
@@ -131,10 +138,12 @@ public class BundleMojo extends AbstractYamcsMojo {
             throw new MojoExecutionException("Cannot prepare bundle directory", e);
         }
 
-        try {
-            initConfiguration(tempRoot);
-        } catch (IOException e) {
-            throw new MojoExecutionException("Cannot create configuration", e);
+        if (includeConfiguration) {
+            try {
+                initConfiguration(tempRoot);
+            } catch (IOException e) {
+                throw new MojoExecutionException("Cannot create configuration", e);
+            }
         }
 
         File libDirectory = new File(tempRoot, "lib");

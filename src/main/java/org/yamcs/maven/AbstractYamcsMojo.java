@@ -63,6 +63,8 @@ public abstract class AbstractYamcsMojo extends AbstractProgramMojo {
 
         if (configurationDirectory.exists()) {
             FileUtils.copyDirectoryStructure(configurationDirectory, directory);
+        } else {
+            getLog().warn(String.format("Yamcs configuration directory %s does not exist", configurationDirectory));
         }
     }
 
