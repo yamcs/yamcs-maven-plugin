@@ -56,6 +56,14 @@ public class BundleMojo extends AbstractYamcsMojo {
     private String classifier;
 
     /**
+     * Whether 'yamcs' and 'yamcsadmin' wrapper scripts should be included in the
+     * bundle. Set to <code>false</code> when bundling a reusable extension instead
+     * of an application.
+     */
+    @Parameter(property = "yamcs.includeDefaultWrappers", defaultValue = "true")
+    private boolean includeDefaultWrappers;
+
+    /**
      * Specifies the formats of the bundle. Multiple formats can be supplied. Each
      * format is specified by supplying one of the following values in a
      * &lt;format&gt; subelement:
@@ -147,12 +155,14 @@ public class BundleMojo extends AbstractYamcsMojo {
             throw new MojoExecutionException("Cannot build lib directory", e);
         }
 
-        try {
-            File binDirectory = new File(tempRoot, "bin");
-            binDirectory.mkdirs();
-            copyWrappers(binDirectory);
-        } catch (IOException e) {
-            throw new MojoExecutionException("Could not copy wrappers", e);
+        if (includeDefaultWrappers) {
+            try {
+                File binDirectory = new File(tempRoot, "bin");
+                binDirectory.mkdirs();
+                copyWrappers(binDirectory);
+            } catch (IOException e) {
+                throw new MojoExecutionException("Could not copy wrappers", e);
+            }
         }
     }
 

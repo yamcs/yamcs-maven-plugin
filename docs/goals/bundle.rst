@@ -33,6 +33,14 @@ configurationDirectory (file)
 
     User property is: ``yamcs.configurationDirectory``
 
+includeDefaultWrappers (boolean)
+    Whether ``yamcs`` and ``yamcsadmin`` wrapper scripts should be included in the bundle. Set to  ``false`` when
+    bundling a reusable extension instead of an application.
+
+    Default value is: ``true``
+
+    User property is: ``yamcs.includeDefaultWrappers``
+
 formats (list)
     Specifies the formats of the bundle. Multiple formats can be supplied. Each format is specified by supplying one of the following values in a <format> subelement:
 
