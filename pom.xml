@@ -3,7 +3,7 @@
 
   <groupId>org.yamcs</groupId>
   <artifactId>yamcs-maven-plugin</artifactId>
-  <version>1.2.6-SNAPSHOT</version>
+  <version>1.2.6</version>
   <packaging>maven-plugin</packaging>
 
   <name>Yamcs Maven Plugin</name>
@@ -293,6 +293,9 @@
                 <goals>
                   <goal>sign</goal>
                 </goals>
+                <configuration>
+                  <keyname>yamcs@spaceapplications.com</keyname>
+                </configuration>
               </execution>
             </executions>
           </plugin>
