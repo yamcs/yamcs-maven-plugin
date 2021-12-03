@@ -97,8 +97,8 @@ public class DetectMojo extends AbstractMojo {
         try (FileWriter writer = new FileWriter(spiFile)) {
             for (JavaClass yamcsPluginClass : yamcsPluginClasses) {
                 writer.write(yamcsPluginClass.getFullyQualifiedName());
+		writer.write("\n");
             }
-            writer.write("\n");
         } catch (IOException e) {
             throw new MojoExecutionException("Failed to write " + spiFile, e);
         }
