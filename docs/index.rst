@@ -2,12 +2,15 @@
 Yamcs Maven Plugin
 ==================
 
+.. raw:: latex
+
+    \chapter{About Yamcs Maven Plugin}
+
 This is a Maven plugin for developing a Yamcs application.
 
 Yamcs is a Java-based open source mission control framework. Its functionalities can be extended with your own custom code.
 
-Goals
-~~~~~
+.. rubric:: Goals
 
 .. list-table::
     :widths: 40 60
@@ -27,8 +30,7 @@ Goals
       - Detect metadata for Yamcs plugins.
 
 
-Usage
-~~~~~
+.. rubric:: Usage
 
 This plugin expects to find Yamcs configuration in ``${project.basedir}/src/main/yamcs`` in subfolders ``etc`` and ``mdb``.
 
@@ -77,8 +79,7 @@ To run a Yamcs application:
     mvn yamcs:run
 
 
-Examples
-~~~~~~~~
+.. rubric:: Examples
 
 * :doc:`examples/plugin`
 * :doc:`examples/packaging`
