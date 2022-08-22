@@ -85,7 +85,7 @@ This example bundles only your extensions and configurations. The generated pack
 
 Set the Maven scope of standard Yamcs dependencies to ``provided``. This way they can be used during compilation, while the ``bundle`` goal will ignore them.
 
-Set also ``includeDefaultWrappers`` to ``false`` to prevent the ``yamcs`` and ``yamcsadmin`` shell scripts from being added to your package. These are already included in official Yamcs core builds.
+Set also ``includeDefaultWrappers`` to ``false`` to prevent the ``yamcsd`` and ``yamcsadmin`` shell scripts from being added to your package. These are already included in official Yamcs core builds.
 
 .. code-block:: xml
     :emphasize-lines: 14,20,38
