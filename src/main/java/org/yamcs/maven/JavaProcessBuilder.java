@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import jnr.constants.platform.Signal;
+import jnr.posix.util.Platform;
 import jnr.posix.POSIX;
 import jnr.posix.POSIXFactory;
 
@@ -54,10 +55,10 @@ public class JavaProcessBuilder {
                 if (reference != null && reference.isAlive()) {
                     System.out.println("Gracefully stopping...");
                     
-                    // Prefer not to use Process.destroy(), because this also immediately shuts down
-                    // its output stream, which may still contain useful information.
+                    // Prefer not to use Process.destroy(), because it immediately shuts down
+                    // the process output stream, which may still provide useful information.
                     long pid = getProcessPid(reference);
-                    if (pid != -1) {
+                    if (pid != -1 && !Platform.IS_WINDOWS) {
                         posix.kill(pid, Signal.SIGTERM.intValue());
                     } else {
                         reference.destroy();
