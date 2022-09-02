@@ -85,7 +85,12 @@ public class JavaProcessBuilder {
                 redirectOutput(process, log);
                 process.waitFor();
                 if (!process.isAlive()) {
-                    Runtime.getRuntime().removeShutdownHook(watchdog);
+                    try {
+                        Runtime.getRuntime().removeShutdownHook(watchdog);
+                    } catch (IllegalStateException e) {
+                        // Ignore: sporadically throws a "Shutdown in progress" exception,
+                        // which then shows a BUILD FAILURE in the Maven output.
+                    }
                 }
             }
 
