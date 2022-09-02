@@ -147,8 +147,7 @@
           <version>3.10.1</version>
           <configuration>
             <encoding>${project.build.sourceEncoding}</encoding>
-            <source>1.8</source>
-            <target>1.8</target>
+            <release>11</release>
           </configuration>
         </plugin>
         <plugin>
@@ -208,7 +207,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -234,7 +233,7 @@
                   <version>[${mavenVersion},)</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>[1.8,)</version>
+                  <version>[11,)</version>
                 </requireJavaVersion>
               </rules>
               <fail>true</fail>
@@ -326,10 +325,7 @@
               </execution>
             </executions>
             <configuration>
-              <source>8</source>
-              <additionalJOptions>
-                <additionalJOption>--no-module-directories</additionalJOption>
-              </additionalJOptions>
+              <release>11</release>
             </configuration>
           </plugin>
           <plugin>
