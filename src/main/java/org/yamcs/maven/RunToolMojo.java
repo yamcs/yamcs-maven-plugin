@@ -41,6 +41,7 @@ public class RunToolMojo extends AbstractProgramMojo {
     @Parameter(defaultValue = "${project.build.outputDirectory}", readonly = true)
     protected File classesDirectory;
 
+    @Override
     public void execute() throws MojoExecutionException {
         if (!directory.exists()) {
             throw new MojoExecutionException("Cannot find directory " + directory);
@@ -51,6 +52,7 @@ public class RunToolMojo extends AbstractProgramMojo {
 
     private void runTool() throws MojoExecutionException {
         JavaProcessBuilder b = new JavaProcessBuilder(getLog(), -1);
+        b.addEnvironment("CLASSPATH", buildClasspath());
         b.setDirectory(directory);
         b.setArgs(getArgs());
         b.setWaitFor(true);
@@ -64,8 +66,6 @@ public class RunToolMojo extends AbstractProgramMojo {
 
     protected List<String> getArgs() throws MojoExecutionException {
         List<String> result = new ArrayList<>();
-        result.add("-cp");
-        result.add(buildClasspath());
         result.add(tool);
         if (args != null) {
             for (String argsEl : args) {

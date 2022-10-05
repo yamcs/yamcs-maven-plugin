@@ -50,6 +50,7 @@ public class RunMojo extends AbstractYamcsMojo {
     @Parameter(property = "yamcs.stopTimeout")
     private long stopTimeout = 10000;
 
+    @Override
     public void execute() throws MojoExecutionException {
         if (skip) {
             getLog().info("Skipping execution");
@@ -68,6 +69,7 @@ public class RunMojo extends AbstractYamcsMojo {
 
     private void runYamcs() throws MojoExecutionException {
         JavaProcessBuilder b = new JavaProcessBuilder(getLog(), stopTimeout);
+        b.addEnvironment("CLASSPATH", buildClasspath());
         b.setDirectory(directory);
         b.setArgs(getArgs());
         b.setJvmOpts(getJvmArgs());
@@ -82,8 +84,6 @@ public class RunMojo extends AbstractYamcsMojo {
 
     protected List<String> getArgs() throws MojoExecutionException {
         List<String> result = new ArrayList<>();
-        result.add("-cp");
-        result.add(buildClasspath());
         result.add("-Djava.util.logging.manager=org.yamcs.logging.YamcsLogManager");
         result.add("org.yamcs.YamcsServer");
         if (args != null) {
