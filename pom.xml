@@ -46,10 +46,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.github.jnr</groupId>
-      <artifactId>jnr-posix</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.thoughtworks.qdox</groupId>
       <artifactId>qdox</artifactId>
     </dependency>
