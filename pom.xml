@@ -3,7 +3,7 @@
 
   <groupId>org.yamcs</groupId>
   <artifactId>yamcs-maven-plugin</artifactId>
-  <version>1.2.9-SNAPSHOT</version>
+  <version>1.2.9</version>
   <packaging>maven-plugin</packaging>
 
   <name>Yamcs Maven Plugin</name>
