@@ -37,7 +37,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mavenVersion>3.2.5</mavenVersion>
     <pluginPluginVersion>3.6.4</pluginPluginVersion>
-    <yamcsVersion>5.7.6</yamcsVersion>
+    <yamcsVersion>5.7.8</yamcsVersion>
   </properties>
 
   <prerequisites>
@@ -82,11 +82,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>com.github.jnr</groupId>
-        <artifactId>jnr-posix</artifactId>
-        <version>3.1.15</version>
-      </dependency>
       <dependency>
         <groupId>com.thoughtworks.qdox</groupId>
         <artifactId>qdox</artifactId>

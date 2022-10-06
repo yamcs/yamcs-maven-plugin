@@ -1,6 +1,7 @@
 package org.yamcs.maven;
 
 import java.io.File;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -91,6 +92,7 @@ public class JavaProcessBuilder {
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(directory);
         pb.environment().putAll(extraEnv);
+        pb.redirectInput(Redirect.INHERIT);
         return pb;
     }
 
