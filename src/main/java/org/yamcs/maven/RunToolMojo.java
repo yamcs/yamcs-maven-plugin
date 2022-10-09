@@ -66,6 +66,8 @@ public class RunToolMojo extends AbstractProgramMojo {
 
     protected List<String> getArgs() throws MojoExecutionException {
         List<String> result = new ArrayList<>();
+        // Linux/osx: "lib:lib/ext", windows: "lib;lib\ext"
+        result.add("-Djava.library.path=lib" + File.pathSeparator + "lib" + File.separator + "ext");
         result.add(tool);
         if (args != null) {
             for (String argsEl : args) {

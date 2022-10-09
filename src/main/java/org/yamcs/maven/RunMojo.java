@@ -85,6 +85,8 @@ public class RunMojo extends AbstractYamcsMojo {
     protected List<String> getArgs() throws MojoExecutionException {
         List<String> result = new ArrayList<>();
         result.add("-Djava.util.logging.manager=org.yamcs.logging.YamcsLogManager");
+        // Linux/osx: "lib:lib/ext", windows: "lib;lib\ext"
+        result.add("-Djava.library.path=lib" + File.pathSeparator + "lib" + File.separator + "ext");
         result.add("org.yamcs.YamcsServer");
         if (args != null) {
             for (String argsEl : args) {
