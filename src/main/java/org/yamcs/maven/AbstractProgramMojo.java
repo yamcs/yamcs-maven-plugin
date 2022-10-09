@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
@@ -33,15 +32,19 @@ public abstract class AbstractProgramMojo extends AbstractMojo {
     protected RepositorySystem repositorySystem;
 
     protected List<File> getDependencyFiles(List<String> scopes) throws MojoExecutionException {
-        Set<File> directDeps = extractArtifactPaths(this.project.getDependencyArtifacts(), scopes);
-        Set<File> transitiveDeps = extractArtifactPaths(this.project.getArtifacts(), scopes);
-        return Stream.concat(directDeps.stream(), transitiveDeps.stream()).filter(Objects::nonNull).distinct()
+        return extractArtifactPaths(project.getArtifacts(), scopes).stream()
+                .filter(Objects::nonNull)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
     private Set<File> extractArtifactPaths(Set<Artifact> artifacts, List<String> scopes) {
-        return artifacts.stream().filter(e -> scopes.contains(e.getScope())).filter(e -> e.getType().equals("jar"))
-                .map(this::asMavenCoordinates).distinct().map(this::resolveArtifact)
+        return artifacts.stream()
+                .filter(e -> scopes.contains(e.getScope()))
+                .filter(e -> e.getType().equals("jar"))
+                .map(this::asMavenCoordinates)
+                .distinct()
+                .map(this::resolveArtifact)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
