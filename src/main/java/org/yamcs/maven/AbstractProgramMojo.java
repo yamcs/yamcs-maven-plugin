@@ -57,7 +57,7 @@ public abstract class AbstractProgramMojo extends AbstractMojo {
         if (artifact.hasClassifier()) {
             coords.append(":").append(artifact.getClassifier());
         }
-        coords.append(":").append(artifact.getVersion());
+        coords.append(":").append(artifact.getBaseVersion());
         return coords.toString();
     }
 
