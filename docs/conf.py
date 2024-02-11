@@ -9,13 +9,13 @@ yamcs_version_el = properties_el.find("{http://maven.apache.org/POM/4.0.0}yamcsV
 
 # Configure Sphinx
 project = "yamcs-maven-plugin"
-copyright = "2019, Space Applications Services"
+copyright = "2019-present, Space Applications Services"
 author = "Yamcs Team"
 version = plugin_version_el.text  # The short X.Y version
 release = version  # The full version, including alpha/beta/rc tags
 extensions = ["sphinxcontrib.fulltoc"]
 source_suffix = ".rst"
-language = None
+language = "en"
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 pygments_style = "sphinx"
 

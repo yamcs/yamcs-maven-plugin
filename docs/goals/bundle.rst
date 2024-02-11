@@ -47,6 +47,25 @@ includeConfiguration (boolean)
 
     User property is: ``yamcs.includeConfiguration``
 
+useDefaultExcludes (boolean)
+    Set whether the default excludes are being applied.
+
+    Default value is: ``true``.
+
+includes (list)
+    Set a string of patterns, which included files should match. Add each argument in an <include> subelement.
+
+excludes (list)
+    Set a string of patterns, which excluded files should match. Add each argument in an <exclude> subelement.
+
+    For example:
+
+    .. code-block:: xml
+
+      <excludes>
+        <exclude>**/__pycache__/**</exclude>
+      </excludes>
+
 formats (list)
     Specifies the formats of the bundle. Multiple formats can be supplied. Each format is specified by supplying one of the following values in a <format> subelement:
 

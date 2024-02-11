@@ -15,7 +15,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.archiver.FileSet;
 import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
 import org.codehaus.plexus.archiver.tar.TarArchiver;
 import org.codehaus.plexus.archiver.tar.TarArchiver.TarCompressionMethod;
@@ -64,11 +63,30 @@ public class BundleMojo extends AbstractYamcsMojo {
     private boolean includeDefaultWrappers;
 
     /**
-     * Whether this module's configuration directory (default location: <code>src/main/yamcs</code>)
+     * Whether this module's configuration directory (default location:
+     * <code>src/main/yamcs</code>)
      * should be included in the bundle.
      */
     @Parameter(property = "yamcs.includeConfiguration", defaultValue = "true")
     private boolean includeConfiguration;
+
+    /**
+     * Set whether the default excludes are being applied. Defaults to true.
+     */
+    @Parameter(defaultValue = "true")
+    private boolean useDefaultExcludes;
+
+    /**
+     * Set a string of patterns, which included files should match.
+     */
+    @Parameter()
+    private List<String> includes;
+
+    /**
+     * Set a string of patterns, which excluded files should match.
+     */
+    @Parameter()
+    private List<String> excludes;
 
     /**
      * Specifies the formats of the bundle. Multiple formats can be supplied. Each
@@ -225,7 +243,15 @@ public class BundleMojo extends AbstractYamcsMojo {
         File destFile = new File(target, filename);
         archiver.setDestFile(destFile);
 
-        FileSet fileSet = new DefaultFileSet(tempRoot).prefixed(finalName + "/");
+        DefaultFileSet fileSet = new DefaultFileSet(tempRoot);
+        fileSet.setUsingDefaultExcludes(useDefaultExcludes);
+        if (includes != null) {
+            fileSet.setIncludes(includes.toArray(new String[0]));
+        }
+        if (excludes != null) {
+            fileSet.setExcludes(excludes.toArray(new String[0]));
+        }
+        fileSet.prefixed(finalName + "/");
         archiver.addFileSet(fileSet);
         try {
             archiver.createArchive();
