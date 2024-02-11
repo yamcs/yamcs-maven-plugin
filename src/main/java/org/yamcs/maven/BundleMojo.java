@@ -219,9 +219,13 @@ public class BundleMojo extends AbstractYamcsMojo {
                 archiver = archiverManager.getArchiver("tar");
                 ((TarArchiver) archiver).setCompression(TarCompressionMethod.snappy);
                 ((TarArchiver) archiver).setLongfile(TarLongFileMode.posix);
-            } else if (format.equals("tar.xz") || format.equals("xz")) {
+            } else if (format.equals("tar.xz") || format.equals("txz")) {
                 archiver = archiverManager.getArchiver("tar");
                 ((TarArchiver) archiver).setCompression(TarCompressionMethod.xz);
+                ((TarArchiver) archiver).setLongfile(TarLongFileMode.posix);
+            } else if (format.equals("tar.zst") || format.equals("tzst")) {
+                archiver = archiverManager.getArchiver("tar");
+                ((TarArchiver) archiver).setCompression(TarCompressionMethod.zstd);
                 ((TarArchiver) archiver).setLongfile(TarLongFileMode.posix);
             } else if (format.equals("zip")) {
                 archiver = archiverManager.getArchiver("zip");

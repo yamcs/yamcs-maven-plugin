@@ -75,6 +75,7 @@ formats (list)
     * tar.bz2 or tbz2 - Creates a bzip'd TAR format
     * tar.snappy - Creates a snappy'd TAR format
     * tar.xz or txz - Creates a xz'd TAR format
+    * tar.zst or tzst - Creates a zst'd TAR format
 
     If unspecified the behavior is equivalent to:
 
