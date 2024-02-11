@@ -46,9 +46,6 @@ public abstract class AbstractYamcsMojo extends AbstractProgramMojo {
     protected void initConfiguration(File directory) throws IOException {
         directory.mkdirs();
 
-        File etcDir = new File(directory, "etc");
-        etcDir.mkdir();
-
         if (configurationDirectory.exists()) {
             FileUtils.copyDirectoryStructure(configurationDirectory, directory);
         } else {
