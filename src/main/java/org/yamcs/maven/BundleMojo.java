@@ -89,6 +89,35 @@ public class BundleMojo extends AbstractYamcsMojo {
     private List<String> excludes;
 
     /**
+     * Specifies the Maven scope of bundled dependencies. Defaults to
+     * runtime.
+     *
+     * <ul>
+     * <li><em>runtime</em> scope gives runtime and compile dependencies</li>
+     * <li><em>compile</em> scope gives compile, provided and system dependencies</li>
+     * <li><em>test</em> scope gives all dependencies</li>
+     * <li><em>provided</em> scope gives only provided dependencies</li>
+     * <li><em>system</em> scope gives only system dependencies</li>
+     * </ul>
+     *
+     * Core Yamcs dependencies, or dependencies to other Yamcs plugins, should
+     * be declared with <em>provided</em> scope in your project's dependencies.
+     * <p>
+     * Then you can control whether to bundle them using this scope setting.
+     * <p>
+     * For example:
+     *
+     * <ul>
+     * <li>For an all-in-one bundle you would want to include all dependencies, and so
+     * could use <em>compile</em> scope.</li>
+     * <li>For a dropin bundle that is to be added to an existing installation, use
+     *  a <em>runtime</em> scope (which is the default behaviour).</li>
+     * </ul>
+     */
+    @Parameter(defaultValue = "runtime")
+    private String scope;
+
+    /**
      * Specifies the formats of the bundle. Multiple formats can be supplied. Each
      * format is specified by supplying one of the following values in a
      * &lt;format&gt; subelement:
@@ -171,8 +200,31 @@ public class BundleMojo extends AbstractYamcsMojo {
         if (projectFile != null) {
             libFiles.add(projectFile);
         }
-        List<String> scopes = Arrays.asList("compile", "runtime");
-        libFiles.addAll(getDependencyFiles(scopes));
+
+        switch (this.scope) {
+        case "runtime":
+            libFiles.addAll(getDependencyFiles(
+                Arrays.asList("compile", "runtime")));
+            break;
+        case "compile":
+            libFiles.addAll(getDependencyFiles(
+                Arrays.asList("compile", "provided", "system")));
+            break;
+        case "test":
+            libFiles.addAll(getDependencyFiles(
+                Arrays.asList("compile", "provided", "runtime", "system", "test")));
+            break;
+        case "provided":
+            libFiles.addAll(getDependencyFiles(
+                Arrays.asList("provided")));
+            break;
+        case "system":
+            libFiles.addAll(getDependencyFiles(
+                Arrays.asList("system")));
+            break;
+        default:
+            throw new MojoExecutionException("Unexpected scope");
+        }
 
         try {
             for (File file : libFiles) {

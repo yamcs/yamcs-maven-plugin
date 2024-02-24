@@ -48,14 +48,20 @@ includeConfiguration (boolean)
     User property is: ``yamcs.includeConfiguration``
 
 useDefaultExcludes (boolean)
+    .. versionadded:: 1.2.11
+
     Set whether the default excludes are being applied.
 
     Default value is: ``true``.
 
 includes (list)
+    .. versionadded:: 1.2.11
+
     Set a string of patterns, which included files should match. Add each argument in an <include> subelement.
 
 excludes (list)
+    .. versionadded:: 1.2.11
+
     Set a string of patterns, which excluded files should match. Add each argument in an <exclude> subelement.
 
     For example:
@@ -65,6 +71,19 @@ excludes (list)
       <excludes>
         <exclude>**/__pycache__/**</exclude>
       </excludes>
+
+scope (string)
+    .. versionadded:: 1.2.12
+
+    Specifies the Maven scope of bundled dependencies.
+
+    * runtime - Bundle runtime and compile dependencies
+    * compile - Bundle compile, provided and system dependencies
+    * test - Bundle all dependencies
+    * provided - Bundle only provided dependencies
+    * system - Bundle only system dependencies
+
+    Default value is: ``runtime``.
 
 formats (list)
     Specifies the formats of the bundle. Multiple formats can be supplied. Each format is specified by supplying one of the following values in a <format> subelement:

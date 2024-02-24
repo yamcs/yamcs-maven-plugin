@@ -32,11 +32,11 @@ This example bundles Yamcs together with your extensions and configurations in o
     <project>
       ...
       <packaging>jar</packaging>
-    
+
       <properties>
         <yamcsVersion>{{ YAMCS_VERSION }}</yamcsVersion>
       </properties>
-    
+
       <dependencies>
         <dependency>
           <groupId>org.yamcs</groupId>
@@ -49,7 +49,7 @@ This example bundles Yamcs together with your extensions and configurations in o
           <version>${yamcsVersion}</version>
         </dependency>
       </dependencies>
-    
+
       <build>
         <plugins>
           <plugin>
@@ -93,11 +93,11 @@ Set also ``includeDefaultWrappers`` to ``false`` to prevent the ``yamcsd`` and `
     <project>
       ...
       <packaging>jar</packaging>
-    
+
       <properties>
         <yamcsVersion>{{ YAMCS_VERSION }}</yamcsVersion>
       </properties>
-    
+
       <dependencies>
         <dependency>
           <groupId>org.yamcs</groupId>
@@ -112,7 +112,7 @@ Set also ``includeDefaultWrappers`` to ``false`` to prevent the ``yamcsd`` and `
           <scope>provided</scope>
         </dependency>
       </dependencies>
-    
+
       <build>
         <plugins>
           <plugin>
@@ -128,6 +128,69 @@ Set also ``includeDefaultWrappers`` to ``false`` to prevent the ``yamcsd`` and `
                 </goals>
                 <configuration>
                   <includeDefaultWrappers>false</includeDefaultWrappers>
+                  <formats>
+                    <format>tar.gz</format>
+                    <format>zip</format>
+                  </formats>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      ...
+    </project>
+
+
+Combination
+-----------
+
+.. versionadded:: 1.2.12
+
+What if you want to mark your dependencies as provided, and at the same time also make a bundle with those dependencies included. You can do so by setting the ``scope`` property on the bundle configuration to ``compile``. The default scope if unset, is ``runtime``, which excludes provided dependencies.
+
+
+.. code-block:: xml
+    :emphasize-lines: 14,20,38
+
+    <project>
+      ...
+      <packaging>jar</packaging>
+
+      <properties>
+        <yamcsVersion>{{ YAMCS_VERSION }}</yamcsVersion>
+      </properties>
+
+      <dependencies>
+        <dependency>
+          <groupId>org.yamcs</groupId>
+          <artifactId>yamcs-core</artifactId>
+          <version>${yamcsVersion}</version>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.yamcs</groupId>
+          <artifactId>yamcs-web</artifactId>
+          <version>${yamcsVersion}</version>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.yamcs</groupId>
+            <artifactId>yamcs-maven-plugin</artifactId>
+            <version>{{ YAMCS_PLUGIN_VERSION }}</version>
+            <executions>
+              <execution>
+                <id>bundle-yamcs</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>bundle</goal>
+                </goals>
+                <configuration>
+                  <scope>compile</scope>
                   <formats>
                     <format>tar.gz</format>
                     <format>zip</format>
