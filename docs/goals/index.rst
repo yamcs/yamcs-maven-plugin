@@ -9,3 +9,4 @@ Goals
     bundle
     run-tool
     detect
+    protoc

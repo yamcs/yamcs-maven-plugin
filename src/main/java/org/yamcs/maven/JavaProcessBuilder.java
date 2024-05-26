@@ -14,7 +14,8 @@ import org.codehaus.plexus.util.cli.StreamPumper;
 
 public class JavaProcessBuilder {
 
-    private static final String[] EXECUTABLE_EXTENSIONS = new String[] { "", ".sh", ".bash", ".exe", ".bat", ".cmd" };
+    private static final String[] EXECUTABLE_EXTENSIONS = new String[] { "", ".sh", ".bash", ".exe", ".bat", ".cmd",
+            ".ps1" };
 
     private List<String> args = new ArrayList<>();
     private List<String> jvmArgs = new ArrayList<>();
@@ -139,7 +140,7 @@ public class JavaProcessBuilder {
         errPumper.start();
     }
 
-    protected File findJava() {
+    protected static File findJava() {
         String javaHome = System.getProperty("java.home");
         File found;
         if (javaHome == null) {

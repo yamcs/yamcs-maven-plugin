@@ -28,6 +28,8 @@ Yamcs is a Java-based open source mission control framework. Its functionalities
       - Run a Yamcs-related tool as part of a Maven build.
     * - :doc:`goals/detect`
       - Detect metadata for Yamcs plugins.
+    * - :doc:`goals/protoc`
+      - Generated Java sources from proto files.
 
 
 .. rubric:: Usage

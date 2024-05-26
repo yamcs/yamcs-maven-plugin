@@ -10,17 +10,20 @@ Attributes:
 * Invokes the execution of the lifecycle phase ``process-classes`` prior to executing itself.
 
 
+.. rubric:: Required Parameters
+
+tool (string)
+    Class name of the tool to execute.
+
+    User property is: ``yamcs.tool``
+
+
 .. rubric:: Optional Parameters
 
 args (list)
     Arguments passed to the Yamcs executable. Add each argument in an <arg> subelement.
         
     User property is: ``yamcs.args``
-
-tool (string)
-    Class name of the tool to execute.
-
-    User property is: ``yamcs.tool``
 
 directory (file)
     The directory where Yamcs is installed.
