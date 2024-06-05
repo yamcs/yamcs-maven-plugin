@@ -20,7 +20,6 @@ import org.apache.maven.model.Organization;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -33,7 +32,6 @@ import org.codehaus.plexus.archiver.manager.ArchiverManager;
  * Generates metadata for detected plugins of the attached project.
  */
 @Mojo(name = "detect", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE)
-@Execute(phase = LifecyclePhase.PROCESS_CLASSES)
 public class DetectMojo extends AbstractMojo {
 
     /**
@@ -54,11 +52,13 @@ public class DetectMojo extends AbstractMojo {
     @Component
     protected MavenProjectHelper projectHelper;
 
+    @Override
     public void execute() throws MojoExecutionException {
         if (skip) {
             getLog().info("Skipping execution");
             return;
         }
+
         JavaProjectBuilder projectBuilder = new JavaProjectBuilder();
         projectBuilder.setErrorHandler(new ErrorHandler() {
             @Override
@@ -97,7 +97,7 @@ public class DetectMojo extends AbstractMojo {
         try (FileWriter writer = new FileWriter(spiFile)) {
             for (JavaClass yamcsPluginClass : yamcsPluginClasses) {
                 writer.write(yamcsPluginClass.getFullyQualifiedName());
-		writer.write("\n");
+                writer.write("\n");
             }
         } catch (IOException e) {
             throw new MojoExecutionException("Failed to write " + spiFile, e);
