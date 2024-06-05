@@ -38,7 +38,7 @@
     <mavenVersion>3.6.3</mavenVersion>
     <pluginPluginVersion>3.6.4</pluginPluginVersion>
     <yamcsVersion>5.9.6</yamcsVersion>
-    <protobufVersion>3.19.4</protobufVersion>
+    <protobufVersion>3.19.6</protobufVersion>
   </properties>
 
   <prerequisites>
