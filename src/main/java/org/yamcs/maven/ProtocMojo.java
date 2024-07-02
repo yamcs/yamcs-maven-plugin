@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -390,13 +391,17 @@ public class ProtocMojo extends AbstractMojo {
             targetFile = new File(protocPluginDirectory, "protoc-gen-yamcs");
         }
 
-        var javaFile = new File(targetFile.getParent(), ServiceGenerator.class.getSimpleName() + ".java");
+        var generatorPath = ServiceGenerator.class.getName().replace('.', '/') + ".java";
+        var javaFile = Path.of(targetFile.getParent(), generatorPath);
+
         try {
-            var resource = "/" + ServiceGenerator.class.getName().replace('.', '/') + ".java";
+            Files.createDirectories(javaFile.getParent());
+
+            var resource = "/" + generatorPath;
             try (var reader = new BufferedReader(new InputStreamReader(
                     getClass().getResourceAsStream(resource)))) {
                 var java = reader.lines().collect(Collectors.joining("\n"));
-                Files.writeString(javaFile.toPath(), java);
+                Files.writeString(javaFile, java);
             }
         } catch (IOException e) {
             throw new MojoInitializationException("Failed to write protoc plugin source");
@@ -451,7 +456,7 @@ public class ProtocMojo extends AbstractMojo {
         return targetFile;
     }
 
-    private void buildUnixPlugin(File javaFile, List<File> jarFiles, File targetFile) {
+    private void buildUnixPlugin(Path javaFile, List<File> jarFiles, File targetFile) {
         File javaLocation = JavaProcessBuilder.findJava();
 
         try (var out = new PrintWriter(new FileWriter(targetFile))) {
@@ -468,7 +473,7 @@ public class ProtocMojo extends AbstractMojo {
         }
     }
 
-    private void buildWindowsPlugin(File javaFile, List<File> jarFiles, File targetFile) {
+    private void buildWindowsPlugin(Path javaFile, List<File> jarFiles, File targetFile) {
         File javaLocation = JavaProcessBuilder.findJava();
 
         try (var out = new PrintWriter(new FileWriter(targetFile))) {
