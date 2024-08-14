@@ -827,7 +827,7 @@ public class ProtocMojo extends AbstractMojo {
         } else if (Os.isArch("ppc64le")) {
             classifier += "ppcle_64";
         } else {
-            throw new MojoInitializationException("Unexpected architecture: " + System.getProperty("os.name"));
+            throw new MojoInitializationException("Unexpected architecture: " + System.getProperty("os.arch"));
         }
 
         Artifact artifact = repositorySystem.createArtifactWithClassifier(
