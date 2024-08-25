@@ -4,44 +4,40 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
-import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.library.ErrorHandler;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.parser.ParseException;
-
-import org.apache.maven.model.Organization;
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
+
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
 
 /**
  * Generates metadata for detected plugins of the attached project.
  */
 @Mojo(name = "detect", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE)
-public class DetectMojo extends AbstractMojo {
+public class DetectMojo extends AbstractProgramMojo {
 
     /**
      * Skip execution
      */
     @Parameter(property = "yamcs.skip", defaultValue = "false")
     protected boolean skip;
-
-    @Parameter(defaultValue = "${project}", readonly = true)
-    protected MavenProject project;
 
     @Parameter(defaultValue = "${project.build.outputDirectory}", readonly = true)
     protected File classesDirectory;
@@ -59,31 +55,42 @@ public class DetectMojo extends AbstractMojo {
             return;
         }
 
-        JavaProjectBuilder projectBuilder = new JavaProjectBuilder();
-        projectBuilder.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void handle(ParseException parseException) {
-                // Some syntax (often in generated code) trips the qdox parser.
-                // Ignore those errors. We only care to find Yamcs plugin classes.
-                getLog().debug("Squelching qdox parse exception", parseException);
-            }
-        });
+        var projectBuilder = new JavaProjectBuilder();
 
-        for (String sourceRoot : project.getCompileSourceRoots()) {
+        // Some syntax (often in generated code) trips the QDox parser.
+        // Ignore those errors. We only care to find Yamcs plugin classes.
+        projectBuilder.setErrorHandler(e -> getLog().debug("Squelching QDox parse exception", e));
+
+        // Add dependencies to QDox, so it can correctly establish the "isA" relation.
+        // For example, a plugin could be extending org.yamcs.AbstractPlugin
+        var urls = getDependencyFiles(Arrays.asList("compile", "provided", "system")).stream()
+                .filter(Objects::nonNull)
+                .distinct()
+                .map(f -> {
+                    try {
+                        return f.toURI().toURL();
+                    } catch (MalformedURLException e) {
+                        throw new AssertionError(e);
+                    }
+                })
+                .collect(Collectors.toList());
+        var classLoader = new URLClassLoader(urls.toArray(new URL[0]));
+        projectBuilder.addClassLoader(classLoader);
+
+        // Add also the current project to QDox
+        for (var sourceRoot : project.getCompileSourceRoots()) {
             projectBuilder.addSourceTree(new File(sourceRoot));
         }
 
-        List<JavaClass> yamcsPluginClasses = new ArrayList<>();
-        for (JavaClass javaClass : projectBuilder.getClasses()) {
+        var yamcsPluginClasses = new ArrayList<JavaClass>();
+        for (var javaClass : projectBuilder.getClasses()) {
             if (javaClass.isInterface() || javaClass.isAbstract()) {
                 continue;
             }
 
-            for (JavaClass intf : javaClass.getInterfaces()) {
-                if (intf.isA("org.yamcs.Plugin")) {
-                    getLog().debug("Found plugin " + javaClass);
-                    yamcsPluginClasses.add(javaClass);
-                }
+            if (javaClass.isA("org.yamcs.Plugin")) {
+                getLog().debug("Found plugin " + javaClass);
+                yamcsPluginClasses.add(javaClass);
             }
         }
 
@@ -92,10 +99,10 @@ public class DetectMojo extends AbstractMojo {
             return;
         }
 
-        File spiFile = new File(classesDirectory, "META-INF/services/org.yamcs.Plugin");
+        var spiFile = new File(classesDirectory, "META-INF/services/org.yamcs.Plugin");
         spiFile.getParentFile().mkdirs();
-        try (FileWriter writer = new FileWriter(spiFile)) {
-            for (JavaClass yamcsPluginClass : yamcsPluginClasses) {
+        try (var writer = new FileWriter(spiFile)) {
+            for (var yamcsPluginClass : yamcsPluginClasses) {
                 writer.write(yamcsPluginClass.getFullyQualifiedName());
                 writer.write("\n");
             }
@@ -103,12 +110,12 @@ public class DetectMojo extends AbstractMojo {
             throw new MojoExecutionException("Failed to write " + spiFile, e);
         }
 
-        File metadataDir = new File(classesDirectory, "META-INF/yamcs");
-        for (JavaClass yamcsPluginClass : yamcsPluginClasses) {
-            File pluginResourcesDir = new File(metadataDir, yamcsPluginClass.getFullyQualifiedName());
+        var metadataDir = new File(classesDirectory, "META-INF/yamcs");
+        for (var yamcsPluginClass : yamcsPluginClasses) {
+            var pluginResourcesDir = new File(metadataDir, yamcsPluginClass.getFullyQualifiedName());
             pluginResourcesDir.mkdirs();
 
-            Properties props = new Properties();
+            var props = new Properties();
             props.setProperty("name", project.getArtifactId());
             if (project.getDescription() != null) {
                 props.setProperty("description", project.getDescription());
@@ -118,7 +125,7 @@ public class DetectMojo extends AbstractMojo {
             props.setProperty("version", project.getVersion());
             props.setProperty("generated", ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT));
 
-            Organization org = project.getOrganization();
+            var org = project.getOrganization();
             if (org != null) {
                 if (org.getName() != null) {
                     props.setProperty("organization", org.getName());
@@ -128,8 +135,8 @@ public class DetectMojo extends AbstractMojo {
                 }
             }
 
-            File propsFile = new File(pluginResourcesDir, "plugin.properties");
-            try (OutputStream out = new FileOutputStream(propsFile)) {
+            var propsFile = new File(pluginResourcesDir, "plugin.properties");
+            try (var out = new FileOutputStream(propsFile)) {
                 props.store(out, null);
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to write " + propsFile, e);
