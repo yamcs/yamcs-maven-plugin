@@ -151,7 +151,7 @@ public class ProtocMojo extends AbstractMojo {
      * The descriptor set file name. Only used if {@code writeDescriptorSet} is set
      * to {@code true}.
      */
-    @Parameter(required = true, defaultValue = "${project.build.finalName}.protobin")
+    @Parameter(required = true, defaultValue = "${project.artifactId}.protobin")
     protected String descriptorSetFileName;
 
     /**
@@ -171,26 +171,24 @@ public class ProtocMojo extends AbstractMojo {
 
     /**
      * If {@code true} and {@code writeDescriptorSet} has been set, the compiler
-     * will include all dependencies in the
-     * descriptor set making it "self-contained".
+     * will include all dependencies in the descriptor set making it
+     * "self-contained".
      */
-    @Parameter(required = false, defaultValue = "false")
+    @Parameter(required = false, defaultValue = "true")
     protected boolean includeDependenciesInDescriptorSet;
 
     /**
      * If {@code true} and {@code writeDescriptorSet} has been set, do not strip
-     * SourceCodeInfo from the
-     * FileDescriptorProto. This results in vastly larger descriptors that include
-     * information about the original
-     * location of each decl in the source file as well as surrounding comments.
+     * SourceCodeInfo from the FileDescriptorProto. This results in vastly larger
+     * descriptors that include information about the original location of each decl
+     * in the source file as well as surrounding comments.
      */
-    @Parameter(required = false, defaultValue = "false")
+    @Parameter(required = false, defaultValue = "true")
     protected boolean includeSourceInfoInDescriptorSet;
 
     /**
      * Sets the granularity in milliseconds of the last modification date for
-     * testing whether source protobuf
-     * definitions need recompilation.
+     * testing whether source protobuf definitions need recompilation.
      *
      * <p>
      * This parameter is only used when {@link #checkStaleness} parameter is set to
@@ -205,9 +203,8 @@ public class ProtocMojo extends AbstractMojo {
 
     /**
      * Normally {@code protoc} is invoked on every execution of the plugin. Setting
-     * this parameter to {@code true} will
-     * enable checking timestamps of source protobuf definitions vs. generated
-     * sources.
+     * this parameter to {@code true} will enable checking timestamps of source
+     * protobuf definitions vs. generated sources.
      *
      * @see #staleMillis
      */
@@ -252,7 +249,7 @@ public class ProtocMojo extends AbstractMojo {
      * This is the directory into which the (optional) descriptor set file will be
      * created.
      */
-    @Parameter(required = true, defaultValue = "${project.build.directory}/generated-resources/protobuf/descriptor-sets")
+    @Parameter(required = true, defaultValue = "${project.build.directory}/generated-resources/protobuf")
     private File descriptorSetOutputDirectory;
 
     /**
