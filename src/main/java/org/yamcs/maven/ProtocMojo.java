@@ -218,16 +218,6 @@ public class ProtocMojo extends AbstractMojo {
     private boolean skip;
 
     /**
-     * Usually most of protobuf mojos will not get executed on parent poms (i.e.
-     * projects with packaging type 'pom').
-     * Setting this parameter to {@code true} will force the execution of this mojo,
-     * even if it would usually get
-     * skipped in this case.
-     */
-    @Parameter(required = false, property = "protoc.force", defaultValue = "false")
-    private boolean forceMojoExecution;
-
-    /**
      * When {@code true}, the output directory will be cleared out prior to code
      * generation. With the latest versions of
      * protoc (2.5.0 or later) this is generally not required, although some earlier
@@ -494,7 +484,7 @@ public class ProtocMojo extends AbstractMojo {
             return true;
         }
 
-        if (!forceMojoExecution && "pom".equals(this.project.getPackaging())) {
+        if ("pom".equals(project.getPackaging())) {
             getLog().info("Skipping mojo execution for project with packaging type 'pom'");
             return true;
         }
