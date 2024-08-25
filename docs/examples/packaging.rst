@@ -1,7 +1,7 @@
 Packaging Yamcs
 ===============
 
-Running through Maven is useful for development and for creating prototypes, but it is not recommended for production environments.
+Maven is a build tool, and so running Yamcs through Maven is primarily intended for development and for creating prototypes. In a production environment, you may want to run Yamcs without Maven.
 
 This plugin includes a ``bundle`` goal, which supports two packaging approaches:
 
