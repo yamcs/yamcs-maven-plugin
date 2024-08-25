@@ -9,6 +9,7 @@
                     <goal>detect</goal>
                     <goal>run</goal>
                     <goal>run-tool</goal>
+                    <goal>webapp</goal>
                 </goals>
             </pluginExecutionFilter>
             <action>

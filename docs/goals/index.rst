@@ -10,3 +10,4 @@ Goals
     run-tool
     detect
     protoc
+    webapp
