@@ -122,7 +122,7 @@ public class RunMojo extends AbstractYamcsMojo {
         List<String> classpathEntries = new ArrayList<>();
         classpathEntries.add(classesDirectory.toString());
 
-        List<String> scopes = Arrays.asList("compile", "runtime", "provided");
+        List<String> scopes = Arrays.asList("compile", "provided", "runtime", "system");
         List<File> dependencyFiles = getDependencyFiles(scopes);
         classpathEntries.addAll(dependencyFiles.stream().map(File::toString).collect(Collectors.toList()));
 
