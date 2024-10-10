@@ -454,7 +454,7 @@ public class ProtocMojo extends AbstractMojo {
                     .map(j -> "\"" + j.getAbsolutePath() + "\"")
                     .collect(Collectors.joining(":")));
             out.println();
-            out.println("\"" + javaLocation.getAbsolutePath() + "\" -cp $CP " + javaFile);
+            out.println("\"" + javaLocation.getAbsolutePath() + "\" -cp $CP \"" + javaFile + "\"");
         } catch (IOException e) {
             throw new MojoInitializationException("Could not write plugin script file: " + targetFile, e);
         }
@@ -472,7 +472,7 @@ public class ProtocMojo extends AbstractMojo {
                     .map(j -> "\"" + j.getAbsolutePath() + "\"")
                     .collect(Collectors.joining(";")));
             out.println();
-            out.println("\"" + javaLocation.getAbsolutePath() + "\" -cp %CP% " + javaFile);
+            out.println("\"" + javaLocation.getAbsolutePath() + "\" -cp %CP% \"" + javaFile + "\"");
         } catch (IOException e) {
             throw new MojoInitializationException("Could not write plugin script file: " + targetFile, e);
         }
