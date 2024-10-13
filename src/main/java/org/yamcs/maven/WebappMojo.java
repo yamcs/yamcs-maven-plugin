@@ -38,6 +38,9 @@ public class WebappMojo extends AbstractMojo {
     @Parameter(required = false, property = "webapp.skip", defaultValue = "false")
     private boolean skip;
 
+    @Parameter(required = false, property = "webapp.skipInstall", defaultValue = "false")
+    private boolean skipInstall;
+
     @Parameter(required = true, defaultValue = "${basedir}/src/main/webapp")
     private File webappSourceRoot;
 
@@ -59,10 +62,12 @@ public class WebappMojo extends AbstractMojo {
         getLog().debug("Add resource: " + resource.getDirectory());
         project.addResource(resource);
 
-        if (session.isOffline()) {
-            execNpm("install", "--no-audit", "--no-fund", "--offline");
-        } else {
-            execNpm("install", "--no-audit", "--no-fund");
+        if (!skipInstall) {
+            if (session.isOffline()) {
+                execNpm("install", "--offline");
+            } else {
+                execNpm("install");
+            }
         }
 
         execNpm("run", "build");
@@ -80,6 +85,11 @@ public class WebappMojo extends AbstractMojo {
         var pb = new ProcessBuilder(pbArgs)
                 .directory(webappSourceRoot)
                 .redirectInput(Redirect.INHERIT);
+
+        // Minimize noise
+        pb.environment().put("NPM_CONFIG_AUDIT", "false"); // Equivalent of --no-audit
+        pb.environment().put("NPM_CONFIG_FUND", "false"); // Equivalent of --ho-fund
+        pb.environment().put("NPM_CONFIG_UPDATE_NOTIFIER", "false"); // Equivalent of --no-update-identifier
 
         getLog().info("Executing command: " + String.join(" ", pb.command()));
 
