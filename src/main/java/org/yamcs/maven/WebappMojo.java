@@ -116,7 +116,11 @@ public class WebappMojo extends AbstractMojo {
 
     private void copyDist() throws MojoExecutionException {
         var targetDir = new File(webappOutputDirectory, project.getArtifactId() + "-webapp");
-        getLog().info("Copying " + webappOutputDirectory + " to " + targetDir);
+
+        // Cleanup previous builds
+        FileUtils.deleteQuietly(targetDir);
+
+        getLog().info("Copying " + webappDistRoot + " to " + targetDir);
         try {
             FileUtils.copyDirectory(webappDistRoot, targetDir);
         } catch (IOException e) {
