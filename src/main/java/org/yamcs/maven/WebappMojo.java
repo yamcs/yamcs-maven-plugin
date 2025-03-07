@@ -35,6 +35,9 @@ public class WebappMojo extends AbstractMojo {
     @Parameter(defaultValue = "${session}", readonly = true)
     protected MavenSession session;
 
+    @Parameter(required = false, property = "webapp.dev", defaultValue = "false")
+    private boolean dev;
+
     @Parameter(required = false, property = "webapp.skip", defaultValue = "false")
     private boolean skip;
 
@@ -70,7 +73,12 @@ public class WebappMojo extends AbstractMojo {
             }
         }
 
-        execNpm("run", "build");
+        if (dev) {
+            execNpm("run", "build", "--", "--configuration", "development");
+        } else {
+            execNpm("run", "build");
+        }
+
         copyDist();
         generateManifest();
     }
