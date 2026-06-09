@@ -50,7 +50,8 @@ public class ServiceGenerator {
 
     public static void main(String[] args) throws IOException {
         var request = CodeGeneratorRequest.parseFrom(System.in);
-        var responseb = CodeGeneratorResponse.newBuilder();
+        var responseb = CodeGeneratorResponse.newBuilder()
+                .setSupportedFeatures(CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL_VALUE);
 
         // Index all messages by fully-qualified protobuf name
         for (var file : request.getProtoFileList()) {
