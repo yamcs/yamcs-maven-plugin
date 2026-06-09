@@ -46,7 +46,9 @@ public class Protoc {
      */
     private final File javaOutputDirectory;
 
-    private final File pluginExecutable;
+    private final File yamcsPluginExecutable;
+
+    private final File grpcPluginExecutable;
 
     private final File descriptorSetFile;
 
@@ -91,8 +93,12 @@ public class Protoc {
      *                                         If {@code true}, source code
      *                                         information will be included in the
      *                                         descriptor set.
-     * @param pluginExecutable
-     *                                         location of protoc plugin executable
+     * @param yamcsPluginExecutable
+     *                                         location of the Yamcs protoc plugin
+     *                                         executable
+     * @param grpcPluginExecutable
+     *                                         location of the gRPC protoc plugin
+     *                                         executable
      * @param tempDirectory
      *                                         a directory where temporary files
      *                                         will be generated.
@@ -105,7 +111,8 @@ public class Protoc {
             File descriptorSetFile,
             boolean includeImportsInDescriptorSet,
             boolean includeSourceInfoInDescriptorSet,
-            File pluginExecutable) {
+            File yamcsPluginExecutable,
+            File grpcPluginExecutable) {
         if (executable == null) {
             throw new MojoConfigurationException("'executable' is null");
         }
@@ -122,7 +129,8 @@ public class Protoc {
         this.descriptorSetFile = descriptorSetFile;
         this.includeImportsInDescriptorSet = includeImportsInDescriptorSet;
         this.includeSourceInfoInDescriptorSet = includeSourceInfoInDescriptorSet;
-        this.pluginExecutable = pluginExecutable;
+        this.yamcsPluginExecutable = yamcsPluginExecutable;
+        this.grpcPluginExecutable = grpcPluginExecutable;
         this.error = new StringStreamConsumer();
         this.output = new StringStreamConsumer();
     }
@@ -155,14 +163,18 @@ public class Protoc {
      */
     private List<String> buildProtocCommand() {
         List<String> command = new ArrayList<>();
-        // add the executable
         for (File protoPathElement : protoPathElements) {
             command.add("--proto_path=" + protoPathElement);
         }
         if (javaOutputDirectory != null) {
             command.add("--java_out=" + javaOutputDirectory);
-            command.add("--plugin=protoc-gen-yamcs=" + pluginExecutable);
+            command.add("--plugin=protoc-gen-yamcs=" + yamcsPluginExecutable);
             command.add("--yamcs_out=" + javaOutputDirectory);
+            if (grpcPluginExecutable != null) {
+                command.add("--plugin=protoc-gen-grpc-java=" + grpcPluginExecutable);
+                command.add("--grpc-java_out=" + javaOutputDirectory);
+            }
+
         }
         for (File protoFile : protoFiles) {
             command.add(protoFile.toString());
@@ -201,9 +213,14 @@ public class Protoc {
                 log.debug(LOG_PREFIX + ' ' + javaOutputDirectory);
             }
 
-            if (pluginExecutable != null) {
-                log.debug(LOG_PREFIX + "Plugin executable:");
-                log.debug(LOG_PREFIX + ' ' + pluginExecutable);
+            if (yamcsPluginExecutable != null) {
+                log.debug(LOG_PREFIX + "Yamcs plugin executable:");
+                log.debug(LOG_PREFIX + ' ' + yamcsPluginExecutable);
+            }
+
+            if (grpcPluginExecutable != null) {
+                log.debug(LOG_PREFIX + "gRPC plugin executable:");
+                log.debug(LOG_PREFIX + ' ' + grpcPluginExecutable);
             }
 
             if (descriptorSetFile != null) {
@@ -267,7 +284,9 @@ public class Protoc {
 
         private final List<File> protoFiles;
 
-        private File pluginExecutable;
+        private File yamcsPluginExecutable;
+
+        private File grpcPluginExecutable;
 
         /**
          * A directory into which Java source files will be generated.
@@ -320,8 +339,13 @@ public class Protoc {
             return this;
         }
 
-        public Builder setPluginExecutable(File pluginExecutable) {
-            this.pluginExecutable = pluginExecutable;
+        public Builder setYamcsPluginExecutable(File yamcsPluginExecutable) {
+            this.yamcsPluginExecutable = yamcsPluginExecutable;
+            return this;
+        }
+
+        public Builder setGrpcPluginExecutable(File grpcPluginExecutable) {
+            this.grpcPluginExecutable = grpcPluginExecutable;
             return this;
         }
 
@@ -441,7 +465,8 @@ public class Protoc {
                     descriptorSetFile,
                     includeImportsInDescriptorSet,
                     includeSourceInfoInDescriptorSet,
-                    pluginExecutable);
+                    yamcsPluginExecutable,
+                    grpcPluginExecutable);
         }
     }
 }

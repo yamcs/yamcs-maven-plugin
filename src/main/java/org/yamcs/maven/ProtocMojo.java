@@ -103,6 +103,9 @@ public class ProtocMojo extends AbstractMojo {
     @Parameter(required = false, property = "protocVersion", defaultValue = "3.19.4")
     private String protocVersion;
 
+    @Parameter(required = false, property = "grpcVersion", defaultValue = "1.81.0")
+    private String grpcVersion;
+
     /**
      * Since {@code protoc} cannot access jars, proto files in dependencies are
      * extracted to this location and deleted
@@ -146,6 +149,13 @@ public class ProtocMojo extends AbstractMojo {
      */
     @Parameter(required = true, defaultValue = "true")
     protected boolean attachProtoSources;
+
+    /**
+     * If set to {@code true}, the compiler will generate gRPC-related
+     * files for the specified {@code .proto}
+     */
+    @Parameter(required = true, defaultValue = "false")
+    protected boolean writeGrpc;
 
     /**
      * The descriptor set file name. Only used if {@code writeDescriptorSet} is set
@@ -297,17 +307,23 @@ public class ProtocMojo extends AbstractMojo {
                         }
                     }
 
-                    var pluginExecutable = createPluginExecutable();
+                    var yamcsPluginExecutable = createYamcsPluginExecutable();
 
-                    Artifact artifact = createProtocArtifact();
-                    File file = resolveBinaryArtifact(artifact);
-                    String protocExecutable = file.getAbsolutePath();
+                    Artifact protocArtifact = createProtobufArtifact("com.google.protobuf", "protoc", protocVersion);
+                    File protocFile = resolveBinaryArtifact(protocArtifact);
+                    String protocExecutable = protocFile.getAbsolutePath();
 
                     Protoc.Builder protocBuilder = new Protoc.Builder(protocExecutable)
                             .addProtoPathElement(protoSourceRoot)
                             .addProtoPathElements(derivedProtoPathElements)
                             .addProtoFiles(protoFiles)
-                            .setPluginExecutable(pluginExecutable);
+                            .setYamcsPluginExecutable(yamcsPluginExecutable);
+
+                    if (writeGrpc) {
+                        Artifact grpcArtifact = createProtobufArtifact("io.grpc", "protoc-gen-grpc-java", grpcVersion);
+                        File grpcFile = resolveBinaryArtifact(grpcArtifact);
+                        protocBuilder.setGrpcPluginExecutable(grpcFile.getAbsoluteFile());
+                    }
 
                     if (writeDescriptorSet) {
                         File descriptorSetFile = new File(getDescriptorSetOutputDirectory(), descriptorSetFileName);
@@ -368,7 +384,7 @@ public class ProtocMojo extends AbstractMojo {
         }
     }
 
-    private File createPluginExecutable() {
+    private File createYamcsPluginExecutable() {
         protocPluginDirectory.mkdirs();
 
         File targetFile;
@@ -797,7 +813,7 @@ public class ProtocMojo extends AbstractMojo {
         return targetFile;
     }
 
-    private Artifact createProtocArtifact() {
+    private Artifact createProtobufArtifact(String groupId, String artifactId, String version) {
         String classifier;
         if (Os.isFamily(Os.FAMILY_MAC)) {
             classifier = "osx-";
@@ -818,9 +834,9 @@ public class ProtocMojo extends AbstractMojo {
         }
 
         Artifact artifact = repositorySystem.createArtifactWithClassifier(
-                "com.google.protobuf",
-                "protoc",
-                protocVersion,
+                groupId,
+                artifactId,
+                version,
                 "exe",
                 classifier);
         artifact.setScope(Artifact.SCOPE_RUNTIME);
