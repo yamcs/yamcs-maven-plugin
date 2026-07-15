@@ -168,8 +168,10 @@ public class Protoc {
         }
         if (javaOutputDirectory != null) {
             command.add("--java_out=" + javaOutputDirectory);
-            command.add("--plugin=protoc-gen-yamcs=" + yamcsPluginExecutable);
-            command.add("--yamcs_out=" + javaOutputDirectory);
+            if (yamcsPluginExecutable != null) {
+                command.add("--plugin=protoc-gen-yamcs=" + yamcsPluginExecutable);
+                command.add("--yamcs_out=" + javaOutputDirectory);
+            }
             if (grpcPluginExecutable != null) {
                 command.add("--plugin=protoc-gen-grpc-java=" + grpcPluginExecutable);
                 command.add("--grpc-java_out=" + javaOutputDirectory);

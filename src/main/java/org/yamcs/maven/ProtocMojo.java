@@ -151,6 +151,13 @@ public class ProtocMojo extends AbstractMojo {
     protected boolean attachProtoSources;
 
     /**
+     * Unless set to {@code false}, the compiler will generate Yamcs service
+     * stubs for the specified {@code .proto}
+     */
+    @Parameter(required = true, defaultValue = "true")
+    protected boolean writeYamcsServices;
+
+    /**
      * If set to {@code true}, the compiler will generate gRPC-related
      * files for the specified {@code .proto}
      */
@@ -316,8 +323,11 @@ public class ProtocMojo extends AbstractMojo {
                     Protoc.Builder protocBuilder = new Protoc.Builder(protocExecutable)
                             .addProtoPathElement(protoSourceRoot)
                             .addProtoPathElements(derivedProtoPathElements)
-                            .addProtoFiles(protoFiles)
-                            .setYamcsPluginExecutable(yamcsPluginExecutable);
+                            .addProtoFiles(protoFiles);
+
+                    if (writeYamcsServices) {
+                        protocBuilder.setYamcsPluginExecutable(yamcsPluginExecutable);
+                    }
 
                     if (writeGrpc) {
                         Artifact grpcArtifact = createProtobufArtifact("io.grpc", "protoc-gen-grpc-java", grpcVersion);
