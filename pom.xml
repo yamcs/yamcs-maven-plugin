@@ -37,7 +37,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mavenVersion>3.6.3</mavenVersion>
     <pluginPluginVersion>3.6.4</pluginPluginVersion>
-    <yamcsVersion>5.13.0</yamcsVersion>
+    <yamcsVersion>5.13.2</yamcsVersion>
     <protobufVersion>3.19.6</protobufVersion>
   </properties>
 
@@ -306,7 +306,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.7.0</version>
+            <version>0.11.0</version>
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
