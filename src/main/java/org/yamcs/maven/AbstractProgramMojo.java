@@ -64,6 +64,7 @@ public abstract class AbstractProgramMojo extends AbstractMojo {
     protected File resolveArtifact(String artifact) {
         ArtifactRequest artifactRequest = new ArtifactRequest();
         artifactRequest.setArtifact(new DefaultArtifact(artifact));
+        artifactRequest.setRepositories(project.getRemoteProjectRepositories());
         try {
             ArtifactResult artifactResult = repositorySystem.resolveArtifact(repositorySystemSession, artifactRequest);
             if (artifactResult.isResolved()) {
